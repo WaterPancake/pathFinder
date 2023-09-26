@@ -31,7 +31,7 @@ body{
     grid-template-columns: 2fr 1fr;
     gap: 10px;
 }
-.destination-calculator-header-buttons label{
+.destination-calculator-header-buttons label, .customize-trip-button{
     padding: 15px 20px;
     background-color: grey;
     border-radius: 15px;
@@ -57,4 +57,7 @@ body{
 }
 .destination-calculator input:focus{
     border-radius: 2px solid rgb(1, 1, 13);
+}
+.customize-trip{
+    margin-top: 30px;
 }

@@ -4,7 +4,7 @@ body{
     padding: 20px;
 
 }
-.PathFinderMapPage{
+.path-finder{
     background-color: rgba(32,34,40,255);
     height: 100vh;
     /* padding:20px; */
@@ -54,10 +54,18 @@ body{
     font-size: 20px;
     margin-bottom: 10px;
     padding: 10px;
+    width: 100%;
+    box-sizing: border-box;
 }
 .destination-calculator input:focus{
     border-radius: 2px solid rgb(1, 1, 13);
 }
 .customize-trip{
     margin-top: 30px;
+}
+.getting-current-location{
+    width: 100%;
+}
+label{
+    color:whitesmoke;
 }

@@ -1,3 +1,6 @@
+## Important Please Read
+Added geolocation to get the user location. Howver this requires you to to install a local SSL certificate.
+
 ## Dependencies
 
 Both the Frontend and Backend of this application may have dependencies that are required for it to run. Follow these steps to install the necessary dependencies:

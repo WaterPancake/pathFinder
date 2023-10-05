@@ -11,6 +11,7 @@ function App() {
         <Routes>
           <Route exact path = '/user/login' element={<LoginPage/>}/>
           <Route exact path = '/user/signup' element={<SignupPage/>}/>
+          <Route exact path = '/' element={<PathFinderMainPage/>}/>
           <Route exact path = '/pathfinder' element={<PathFinderMainPage/>}/>
         </Routes>
       </BrowserRouter>

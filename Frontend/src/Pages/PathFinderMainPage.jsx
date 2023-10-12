@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { GoogleMap, useJsApiLoader, Marker, Autocomplete, DirectionsRenderer } from '@react-google-maps/api';
+import { GoogleMap, useJsApiLoader, Marker, DirectionsRenderer, Autocomplete } from '@react-google-maps/api';
 
 import '../Styles/PathFinderMainPage.css';
 
@@ -13,7 +13,7 @@ const PathFinderMainPage = () => {
   const [showMap, setShowMap] = useState(false);
   const mapContainerStyleParameter = {
     width: '100%',
-    height: '100%',
+    height: '100%', 
   };
 
   const [choosingDestination, setChoosingDestination] = useState(false);
@@ -25,11 +25,12 @@ const PathFinderMainPage = () => {
   const [autoCompleteDestination, setAutoCompleteDestination] = useState(null);
   const [isGettingCurrentLocation, setIsGettingCurrentLocation] = useState(false);
   const [directionResponse, setDirectionResponse] = useState(null);
+  const [albanyTestRoute, setAlbanyTestRoute] = useState(null)
   const [distance, setDistance] = useState('');
   const [duration, setDuration] = useState('');
 
-  const originRef = useRef();
-  const destinationRef = useRef();
+  const originRef = useRef(null);
+  const destinationRef = useRef(null);
 
   const handleWhereToButtonClick = () => {
     setChoosingDestination(!choosingDestination);
@@ -79,7 +80,53 @@ const PathFinderMainPage = () => {
       });
     });
   };
+ 
 
+  const createAlbanyRoute = async () => {
+    const directionServiceTest = new window.google.maps.DirectionsService();
+    const albanyRoute = {
+      origin: { lat: 40.7678, lng: -73.9654 },
+      destination: { lat: 42.6526, lng: -73.7562 },
+      travelMode: 'DRIVING',
+    };
+    const testResult = await directionServiceTest.route(albanyRoute);
+    setAlbanyTestRoute(testResult);
+  
+    // const distanceMeters = testResult.routes[0].legs[0].distance.value; // Total distance in meters
+    const markerIntervalMeters = 24140.2; // 15 miles in meters
+  
+    // const placesService = new window.google.maps.places.PlacesService(map);
+    const routePath = testResult.routes[0].overview_path;
+    let remainingDistance = markerIntervalMeters;
+  
+    for (let i = 0; i < routePath.length - 1; i++) {
+      const startPoint = routePath[i];
+      const endPoint = routePath[i + 1];
+      const segmentDistance = window.google.maps.geometry.spherical.computeDistanceBetween(startPoint, endPoint);
+  
+      if (segmentDistance < remainingDistance) {
+        remainingDistance -= segmentDistance;
+      } else {
+        // Calculate the position of the marker along the current segment
+        const fraction = remainingDistance / segmentDistance;
+        const markerPosition = new window.google.maps.LatLng(
+          startPoint.lat() + fraction * (endPoint.lat() - startPoint.lat()),
+          startPoint.lng() + fraction * (endPoint.lng() - startPoint.lng())
+        );
+        console.log(`Position lat:${markerPosition.lat()}, lng${markerPosition.lng()}`)
+
+        // Place a marker at the markerPosition
+        new window.google.maps.Marker({
+          position: markerPosition,
+          map: map,
+          title: 'Marker',
+        });
+  
+        remainingDistance = markerIntervalMeters - segmentDistance + remainingDistance;
+      }
+    }
+  };
+  
   // Calculate and display the route between origin and destination
   const calculateRoute = async () => {
     if (originRef.current.value === '' || destinationRef.current.value === '') {
@@ -113,6 +160,7 @@ const PathFinderMainPage = () => {
 
 //   }
 
+
   return (
     <div className="PathFinderMapPage">
       {isGettingCurrentLocation ? <div className="getting-current-location">Getting Current Location...</div> : null}
@@ -131,12 +179,14 @@ const PathFinderMainPage = () => {
                 >
                   <Marker position={location || { lat: 0, lng: 0 }} />
                   {directionResponse && <DirectionsRenderer directions={directionResponse} />}
+                  {albanyTestRoute && <DirectionsRenderer directions={albanyTestRoute} />}
                 </GoogleMap>
               ) : (
                 <div className="map-is-loading">Is Loading...</div>
               )
             ) : null}
           </div>
+
           <div className="destination-calculator">
             <div className="destination-calculator-header-buttons">
               <label className="where-to-button" htmlFor="Where To?" onClick={handleWhereToButtonClick}>
@@ -146,25 +196,24 @@ const PathFinderMainPage = () => {
                 Login
               </label>
             </div>
-            {choosingDestination ? (
-              <div className="destination-picker">
+            {choosingDestination ? ( <div className="DestinationPicker">
                 <Autocomplete onLoad={(autoComplete) => setAutoCompleteOrigin(autoComplete)} onPlaceChanged={() => setOrigin(autoCompleteOrigin.getPlace().name)}>
-                  <input ref={originRef} type="text" name="" id="" placeholder="Choose a starting location..." onChange={(e) => setOrigin(e.target.value)} />
+                    <input ref={originRef} type="text" name="" id="" placeholder="Choose a starting location..."  />
                 </Autocomplete>
                 <Autocomplete onLoad={(autoComplete) => setAutoCompleteDestination(autoComplete)} onPlaceChanged={() => setDestination(autoCompleteDestination.getPlace().name)}>
-                  <input ref={destinationRef} type="text" name="" id="" placeholder="Choose a destination..." onChange={(e) => setDestination(e.target.value)} />
+                    <input ref={destinationRef} type="text" name="" id="" placeholder="Choose a destination..."  />
                 </Autocomplete>
-              </div>
-            ) : null}
+            </div>): null}
             <div className="customize-trip"></div>
-            <label htmlFor="">Duration: {duration} </label>
-            <label htmlFor="">Distance: {distance} </label>
-            <button onClick={() => map.panTo(center)}>reset</button>
-            <button onClick={() => console.log(origin, destination)}>console</button>
-            {/* <button onClick={getLocation}>location</button> */}
-            <button onClick={calculateRoute}>Calculate Route</button>
-            <button onClick={clearRoute}>Clear Route</button>
-          </div>
+                <label htmlFor="">Duration: {duration} </label>
+                <label htmlFor="">Distance: {distance} </label>
+                <button onClick={() => map.panTo(center)}>reset</button>
+                <button onClick={() => console.log(origin, destination)}>console</button>
+                {/* <button onClick={getLocation}>location</button> */}
+                <button onClick={calculateRoute}>Calculate Route</button>
+                <button onClick={clearRoute}>Clear Route</button>
+                <button onClick={createAlbanyRoute}>Creare Albany Route</button>
+            </div>
         </div>
       ) : null}
     </div>

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { GoogleMap, useJsApiLoader, Marker, DirectionsRenderer, Autocomplete } from '@react-google-maps/api';
+import { GoogleMap, useJsApiLoader, MarkerF, DirectionsRenderer, Autocomplete } from '@react-google-maps/api';
 
 import '../Styles/PathFinderMainPage.css';
 
@@ -46,6 +46,7 @@ const PathFinderMainPage = () => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           setLocation({ lat: position.coords.latitude, lng: position.coords.longitude });
+          console.log(`Location is lat: ${position.coords.latitude} lng:${position.coords.longitude} `)
           setIsGettingCurrentLocation(false);
         },
         (error) => {
@@ -177,7 +178,7 @@ const PathFinderMainPage = () => {
                   onLoad={(map) => setMap(map)}
                   onClick={(event) => console.log(event.latLng.lat(), event.latLng.lng())}
                 >
-                  <Marker position={location || { lat: 0, lng: 0 }} />
+                  <MarkerF position={location || { lat: 0, lng: 0 }} />
                   {directionResponse && <DirectionsRenderer directions={directionResponse} />}
                   {albanyTestRoute && <DirectionsRenderer directions={albanyTestRoute} />}
                 </GoogleMap>

@@ -1,25 +1,25 @@
 body{
     background-color: rgba(32,34,40,255);
-    /* overflow: hidden; */
     padding: 20px;
 
 }
 .path-finder{
-    background-color: rgba(32,34,40,255);
-    height: 100vh;
-    /* padding:20px; */
+    height: 90vh;
     display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 20px;
+    grid-template-columns: 1.5fr 1fr;
+    border-color: 5px solid black;
+    background: -o-linear-gradient(70deg, #06edfa  60%, rgba(0,0,0,0) 20%), -o-linear-gradient(60deg, #08eb6e 50%, #ef0707 50%);
+    background: -moz-linear-gradient(70deg, #3c0ae3  60%, rgba(0,0,0,0) 50%), -moz-linear-gradient(40deg, #122eae 50%, #6ff403 50%);
+    background: linear-gradient(70deg, #ff109f  70%, rgba(0,0,0,0) 10%), linear-gradient(20deg, #63c0e8 50%, #ff7ee3 50%);
 }
+
 .main-container, .destination-calculator{
-    height: 100%;
+    height: auto;
     border-radius: 20px;
 }
 .main-container{
     background-color: rgba(80, 145, 188, 0.924);
-
-    
+    border-color: 10px solid black;
 }
 .destination-calculator{
     border: 1px solid black;

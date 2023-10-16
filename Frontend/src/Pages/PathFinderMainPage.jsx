@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { GoogleMap, useJsApiLoader, MarkerF, DirectionsRenderer, Autocomplete } from '@react-google-maps/api';
 
 import '../Styles/PathFinderMainPage.css';
+import '../Styles/UserPreference.css';
 
 const PathFinderMainPage = () => {
   const { isLoaded } = useJsApiLoader({
@@ -240,7 +241,6 @@ useEffect(()=>{
                 <button onClick={calculateRoute}>Calculate Route</button>
                 <button onClick={clearRoute}>Clear Route</button>
                 <button onClick={createAlbanyRoute}>Creare Albany Route</button>
-                <button onClick={handleClickRoute}>Select Route</button> 
             </div>
         </div>
       ) : null}

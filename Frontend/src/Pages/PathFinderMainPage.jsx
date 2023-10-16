@@ -29,7 +29,7 @@ const [selectedRouteColor, setSelectedRouteColor] = useState(null);
   const [albanyTestRoute, setAlbanyTestRoute] = useState(null)
   const [distance, setDistance] = useState('');
   const [duration, setDuration] = useState('');
-  const [testWaypoints, setTestWaypoints] = useState([])
+  const [testWaypoints, setTestWaypoints] = useState([]) 
 
   const originRef = useRef(null);
   const destinationRef = useRef(null);

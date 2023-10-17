@@ -22,6 +22,10 @@
     background-color: #71707d;
 }
 
+.choice.clicked {
+    background-color: rgb(19, 243, 11);
+}
+
 .container {
     display: grid;
     margin-top: 2px;

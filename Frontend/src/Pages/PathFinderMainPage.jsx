@@ -125,7 +125,7 @@ const [selectedRouteColor, setSelectedRouteColor] = useState(null);
           map: map,
           title: 'Marker',
         });
-        const geoPoint = {lng:markerPosition.lng(), last:markerPosition.lat()}
+        const geoPoint = {lng:markerPosition.lng(), lat:markerPosition.lat()}
         setTestWaypoints(prev => prev.concat(geoPoint))
   
         console.log(`Marker ${markerCount + 1} - Position: lat: ${markerPosition.lat()}, lng: ${markerPosition.lng()}`);

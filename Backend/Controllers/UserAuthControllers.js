@@ -2,48 +2,81 @@ const bcrypt = require('bcrypt')
 const validator = require('validator')
 const {db} = require('../firebase')
 
+const checkIsEmailInUse = async(email, checkAndRetrieve = false) =>{
+    console.log(email)
+    const userRef = db.collection('User_Accounts')
+   try {
+        const querySnapshot = await userRef.where('email', '==', email).get();
+        if(querySnapshot._size === 0){
+            return (false);
+        }
+        else{
+            return checkAndRetrieve ? {isInUse:true, Document:querySnapshot} : true
+        }
+        
+   } catch (error) {
+    throw(error)
+    
+   }
+}
 
-const userLogin = (req, res) =>{
-    res.status(201).json({mssg:"login"})
+const userLogin = async (req, res) =>{
+    const {email, password } = req.body;
+
+    if(!email || !password){
+        return res.status(204).json({error: "All fields must be filled"});
+    }
+    if(!validator.isEmail(email)){
+        return res.status(204).json({error: "Invalid email"});
+    }
+    const isEmailInUse = await checkIsEmailInUse(email, true)
+
+    if(!isEmailInUse.isInUse)
+    {
+        return res.status(409).json({error:"Incorrect email or password"})
+    }
+    console.log(isEmailInUse.Document.docs[0].get('password'))
+    
+    const match = await bcrypt.compare(password,isEmailInUse.Document.docs[0].get('password'))
+
+    if(!match){
+        return res.status(409).json({error:"Incorrect password"})
+    }
+
+    return res.status(200).json({mssg: "Successfull Login"})
 
 }
 
 const userSignup = async(req, res) =>{
-    const {firstName,lastName, email, password } = req.body;
-    if(!firstName || !lastName || !email || !password){
-        res.status(204).json({error: "All fields must be filled"})
-    }
-
-    if(!validator.isEmail(email)){
-        res.status(204).json({error: "Invalid email"})
-    }
-    
-    if(!validator.isPassword(password)){
-        res.status(204).json({error: "Invalid passowrd"})
-        
-    }
     const userRef = db.collection('User_Accounts')
 
-    const salt = bcrypt.genSalt(10,(err,salt)=>{
-        if(err && !salt)
-        {
-            res.status(204).json({error: "Error signing"})
-        }
-        bcrypt.hash(password,salt,async (err, encrypted)=>{
-            if(err && !encrypted)
-            {
-                const userRef = db.collection('User_Accounts')
-                userObject ={firstName, lastName, email,password}
-                userAccount = await userRef.add(userObject)
-                res.status(200).json({mssg: "Account was created"})
+    const {firstName,lastName, email, password } = req.body;
+    if(!firstName || !lastName || !email || !password){
+        return res.status(204).json({error: "All fields must be filled"});
+    }
+    if(!validator.isEmail(email)){
+        return res.status(204).json({error: "Invalid email"});
+    }
+    const isEmailInUse = await checkIsEmailInUse(email)
 
-            }
-        })
+    if(isEmailInUse === true)
+    {
+        return res.status(409).json({ error: "Email is in use" });
+    }
+    
+    if(!validator.isStrongPassword(password)){
+        return res.status(204).json({error: "Invalid passowrd"});
         
-    })
-   
-
-    res.status(202).json({mssg:"signup"})
+    }
+    try {
+        const salt = await bcrypt.genSalt(10);
+        const hash = await bcrypt.hash(password, salt);
+        const userObject = { firstName, lastName, email, password: hash };
+        const userAccount = await userRef.add(userObject);
+        return res.status(201).json({ mssg: "Account was created", userAccount });
+    } catch (error) {
+        return res.status(500).json({ error: "Internal server error" });
+    }
 
 }
 

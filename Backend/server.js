@@ -7,9 +7,9 @@ const userRoutes = require('./Routes/UserAuthRoutes')
 app.use(express.json())
 
 app.listen(8000,()=>{
-    console.log("Begnning to listen on port:8000") 
+    console.log("Begining to listen on port: 8000") 
 })
-app.use(userRoutes)
+app.use(userRoutes) 
 app.post('/set-user',async(req,res)=>{
     console.log(req.body)
     const userRef = db.collection('User_Accounts')

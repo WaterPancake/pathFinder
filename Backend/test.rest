@@ -31,6 +31,14 @@ content-type: application/json
     "email":"ABCab@gmail.com",
     "password":"ABCabc123!@#"
 }
+
 ###
 Post http://localhost:8000/signup
 content-type: application/json
+
+{
+    "firstName":"Tahj",
+    "lastName":"Serieux",
+    "email":"ABCab@gmail.com",
+    "password":"ABCabc123!@#"
+}

@@ -47,7 +47,7 @@ const userLogin = async (req, res) =>{
 
 }
 
-const userSignup = async(req, res) =>{
+const userSignup = async(req, res) =>{ 
     const userRef = db.collection('User_Accounts')
 
     const {firstName,lastName, email, password } = req.body;

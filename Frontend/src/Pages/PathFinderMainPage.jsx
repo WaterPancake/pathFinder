@@ -34,6 +34,7 @@ const PathFinderMainPage = () => {
   const [directionService, setDirectionService] = useState(/** @type google.maps.DirectionsService */ (null));
   const [directionRenderer, setDirectionRenderer] = useState(/** @type google.maps.DirectionsRenderer */(null));
   const [directionsArray, setDirectionsArray] = useState([]);
+  const [pickRoute, setPickRoute] = useState(0)
 
   const mapDivRef = useRef(null)
   /** @type React.MutableRefObject<HTMLInputElement> */
@@ -145,11 +146,7 @@ const PathFinderMainPage = () => {
   //     }
   //   }
   // };
-  // useEffect(()=>{
-  //   testWaypoints.forEach((object)=>{
-  //     console.log(JSON.stringify(object))
-  //   })
-  // },[testWaypoints])
+ 
   
   // Calculate and display the route between origin and destination
   // const calculateRoute = async () => {
@@ -238,13 +235,41 @@ const newClearRoute = () =>{
   setDistance('')
   setDuration(null)
   directionRenderer.setMap(null)
+  directionsArray([])
 
 
 }
-useEffect(()=>{
-  console.log(showMap)
-},[showMap])
+const addWaypoint = () =>{
+  const wayPoint = {location:{lat:40.7484, lng:-73.985428}, stopover:true}
+  if(!originRef.current.value || !destinationRef.current.value){
+    alert('Both fields must be filled');
+  };
+  const origin = originRef.current.value;
+  const destination = destinationRef.current.value;
+  const request = {
+    origin,
+    destination,
+    travelMode: 'DRIVING',
+    waypoints: [wayPoint]
+  };
+  directionService.route(request,(result, status)=>{
+    if(status === 'OK'){
+      directionRenderer.setMap(map)
+      directionRenderer.setDirections(result)
+      setDistance(result.routes[0].legs[0].distance.text);
+      setDuration(result.routes[0].legs[0].duration.text);
+      setDirectionsArray((array)=>[...array,result])
+      console.log(directionsArray)
 
+    };
+
+  }) 
+}
+const toggleRoutes = ()=>{
+  directionRenderer.setDirections(directionsArray[pickRoute]);
+  // console.log(pickRoute,directionsArray.length)
+  setPickRoute((index)=> ((index +1)%directionsArray.length))
+}
 
   return (
     <div className="PathFinderMapPage">
@@ -280,6 +305,8 @@ useEffect(()=>{
                 {/* <button onClick={getLocation}>location</button> */}
                 <button onClick={()=>newCalculateRoute()}>Calculate Route</button>
                 <button onClick={()=> newClearRoute()}>Clear Route</button>
+                <button onClick={()=> addWaypoint()}>Add Waypoint Route</button>
+                <button onClick={()=>toggleRoutes()}>toggle routes</button>
                 {/* <button onClick={createAlbanyRoute}>Creare Albany Route</button> */}
             </div>
         </div>

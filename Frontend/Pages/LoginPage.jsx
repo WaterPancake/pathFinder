@@ -16,12 +16,16 @@ const LoginPage = () => {
 
         // login(email, password)
     }
+    const linkStyle = {
+        textDecoration: 'none', // Remove underline
+        color: 'white', // Change the color
+      }
     return (  
         <div className='user-login-screen'>
             <div className="side-display">
                 {/* <img src={MangoMentorsLogo} alt="" /><br /> */}
                 <label><strong>Log in to your account</strong></label>
-                <h3>Don't have an account? <Link to="/user/signup">Sign Up</Link></h3>
+                <h3>Don't have an account? <Link style={linkStyle}to="/user/signup">Sign Up</Link></h3>
                 <form onSubmit={handleSubmit}>
                     <h2 className='email'>email</h2>
                     <input type="text" onChange={(e)=>{setEmail(e.target.value)}} value={email} 

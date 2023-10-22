@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { GoogleMap, useJsApiLoader, MarkerF, DirectionsRenderer, Autocomplete } from '@react-google-maps/api';
-
+import { Link } from 'react-router-dom';
 import '../Styles/PathFinderMainPage.css';
 import '../Styles/UserPreference.css';
 
@@ -221,7 +221,7 @@ useEffect(()=>{
                 Where To?
               </label>
               <label className="login-button" htmlFor="login">
-                Login
+                <Link to='/user/login'>Login</Link>
               </label>
             </div>
             {choosingDestination ? ( <div className="DestinationPicker">

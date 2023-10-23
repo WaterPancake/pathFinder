@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import '../Styles/SignupPage.css'
-// import { useSignup } from "../hook/useSignup";
+import { useSignup } from "../Hooks/useSignup";
 
 
 const SignupPage = () => {
@@ -12,10 +12,12 @@ const SignupPage = () => {
     const [confirmPassword, setConfrimPassword] = useState('')
     const [emptyFields, setEmtpyFields] = useState([])
     const [agreement, setAgreement] = useState(false)
+    const {isLoading, error, signup, setError} = useSignup()
 
    
     // const {isLoading, error, signup,setError} = useSignup()
     const areAllFieldsFilled =() =>{
+   
         if(!firstName)
         {
             setEmtpyFields(['first-name',...emptyFields])
@@ -38,14 +40,14 @@ const SignupPage = () => {
         }
         if(!firstName || !lastName || !email || !password || !confirmPassword)
         {
-            // setError('All fields must be filled')
+            setError('All fields must be filled')
             return false
         }
         else{
             return true
         }
     }
-    const handleCheck = (e) =>{
+    const handleAgreementCheck = (e) =>{
         setAgreement(e.target.checked)
     }
 
@@ -53,25 +55,21 @@ const SignupPage = () => {
 
         e.preventDefault()
         setEmtpyFields([])
+        setError(null)
         
         if(areAllFieldsFilled()  === true)
         {
             
             if(password === confirmPassword)
             {
-                console.log("Here") 
-                
-                const response = await fetch('/user/signup',{
-                    method:'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({Email:email, Password:password, First_Name:firstName, Last_Name:lastName })
-                })
-                const data = await response.json()
-                console.log(data)
+                signup(email,password, firstName, lastName);
             }
             else{
-                // setError('Passwords must match')
+                setError('Passwords must match');
             }
+        }
+        else{
+            setError('All fields must be filled');
         }
     }
     
@@ -82,7 +80,6 @@ const SignupPage = () => {
             </div>
             <div className="main-display">
 
-                {/* <img src={MangoMentorsLogo} alt="" /><br /> */}
                 <span></span>
                 <label><strong>Create your account</strong></label>
                 <h3>Already have an account? <Link to="/user/login">Log in</Link></h3>
@@ -114,12 +111,12 @@ const SignupPage = () => {
 
                     <input type="checkbox"
                     value={agreement}
-                    onChange={handleCheck} />
+                    onChange={handleAgreementCheck} />
                     <label htmlFor="">
                     I accept the <a href="/">Privacy Policy</a> and the <a href="/">Terms of Service</a></label> <br/>
-                    {/* {error && <div className="error">{error}</div> } */}
-                    <button disabled={(!agreement)} onClick={handleSignup}>Sign up</button>
-                    {/* <button disabled={(!agreement && !isLoading)} onClick={handleSubmit}>Sign up</button> */}
+                    {error && <div className="error">{error}</div> }
+                    {/* <button disabled={(!agreement)} onClick={handleSignup}>Sign up</button> */}
+                    <button disabled={(!agreement && !isLoading)} onClick={(e)=> handleSignup(e)}>Sign up</button>
                     
                 </form>
             </div>

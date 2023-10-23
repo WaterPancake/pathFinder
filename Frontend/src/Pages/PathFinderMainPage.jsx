@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {useJsApiLoader,Autocomplete } from '@react-google-maps/api';
+import { Link } from 'react-router-dom';
 
 import '../Styles/PathFinderMainPage.css';
 import '../Styles/UserPreference.css';
@@ -12,24 +13,15 @@ const PathFinderMainPage = () => {
   });
 
   const [showMap, setShowMap] = useState(false);
-  // const mapContainerStyleParameter = {
-  //   width: '100%',
-  //   height: '100%', 
-  // };
 
   const [choosingDestination, setChoosingDestination] = useState(false);
-  // const [origin, setOrigin] = useState(null);
-  // const [destination, setDestination] = useState(null);
   const [location, setLocation] = useState(null);
   const [map, setMap] = useState(/** @type google.maps.Map */ (null));
-  // const [autoCompleteOrigin, setAutoCompleteOrigin] = useState(null);
-  // const [autoCompleteDestination, setAutoCompleteDestination] = useState(null);
+
   const [isGettingCurrentLocation, setIsGettingCurrentLocation] = useState(false);
-  // const [directionResponse, setDirectionResponse] = useState(null);
-  // const [albanyTestRoute, setAlbanyTestRoute] = useState(null)
+
   const [distance, setDistance] = useState('');
   const [duration, setDuration] = useState('');
-  // const [testWaypoints, setTestWaypoints] = useState([]) 
 
   const [directionService, setDirectionService] = useState(/** @type google.maps.DirectionsService */ (null));
   const [directionRenderer, setDirectionRenderer] = useState(/** @type google.maps.DirectionsRenderer */(null));
@@ -169,7 +161,7 @@ const PathFinderMainPage = () => {
   //   fetchPlacesAlongRoute(results.routes[0].overview_path);
   // };
 
-  // // Clear the route and related information
+  // Clear the route and related information
   // const clearRoute = () => {
   //   setDirectionResponse(null);
   //   setDistance('');
@@ -221,24 +213,25 @@ const newCalculateRoute = () =>{
       setDistance(result.routes[0].legs[0].distance.text);
       setDuration(result.routes[0].legs[0].duration.text);
       setDirectionsArray([result])
+      fetchNodesAlongRoute(result
+        )
       console.log(directionsArray)
 
     };
 
   }) 
 
-
-}
-const newClearRoute = () =>{
-  originRef.current.value = '';
-  destinationRef.current.value = '';
-  setDistance('')
-  setDuration(null)
-  directionRenderer.setMap(null)
-  directionsArray([])
-
-
-}
+};
+  // Clear the route and related information
+  const newClearRoute = () =>{
+    originRef.current.value = '';
+    destinationRef.current.value = '';
+    setDistance('')
+    setDuration(null)
+    directionRenderer.setMap(null)
+    setDirectionsArray([])
+  };
+  
 const addWaypoint = () =>{
   const wayPoint = {location:{lat:40.7484, lng:-73.985428}, stopover:true}
   if(!originRef.current.value || !destinationRef.current.value){
@@ -266,11 +259,54 @@ const addWaypoint = () =>{
   }) 
 }
 const toggleRoutes = ()=>{
-  directionRenderer.setDirections(directionsArray[pickRoute]);
-  // console.log(pickRoute,directionsArray.length)
-  setPickRoute((index)=> ((index +1)%directionsArray.length))
+ if(directionsArray.length>1){ 
+    directionRenderer.setDirections(directionsArray[pickRoute]);
+    // console.log(pickRoute,directionsArray.length)
+    setPickRoute((index)=> ((index +1)%directionsArray.length))
+  }
 }
+const fetchNodesAlongRoute = (directionRouteResult) =>{
 
+    // Calculate the marker interval (every 5th of the route)
+    const routePath = directionRouteResult.routes[0].overview_path;
+    const totalDistance = window.google.maps.geometry.spherical.computeLength(routePath);
+    const markerIntervalMeters = totalDistance / 5;
+  
+    let remainingDistance = markerIntervalMeters;
+    let markerCount = 0;
+  
+    for (let i = 0; i < routePath.length - 1; i++) {
+      const startPoint = routePath[i];
+      const endPoint = routePath[i + 1];
+      const segmentDistance = window.google.maps.geometry.spherical.computeDistanceBetween(startPoint, endPoint);
+  
+      if (segmentDistance < remainingDistance) {
+        remainingDistance -= segmentDistance;
+      } else {
+        // Calculate the position of the marker along the current segment
+        const fraction = remainingDistance / segmentDistance;
+        const markerPosition = new window.google.maps.LatLng(
+          startPoint.lat() + fraction * (endPoint.lat() - startPoint.lat()),
+          startPoint.lng() + fraction * (endPoint.lng() - startPoint.lng())
+        );
+  
+        // Place a marker at the markerPosition
+        new window.google.maps.Marker({
+          position: markerPosition,
+          map: map,
+          title: 'Marker',
+        });
+        // const geoPoint = {lng:markerPosition.lng(), lat:markerPosition.lat()}
+        // setTestWaypoints(prev => prev.concat(geoPoint))
+  
+        console.log(`Marker ${markerCount + 1} - Position: lat: ${markerPosition.lat()}, lng: ${markerPosition.lng()}`);
+        markerCount++;
+  
+        // Move to the next marker interval
+        remainingDistance = markerIntervalMeters - segmentDistance + remainingDistance;
+      }
+    }
+}
   return (
     <div className="PathFinderMapPage">
       {isGettingCurrentLocation ? <div className="getting-current-location">Getting Current Location...</div> : null}
@@ -286,7 +322,7 @@ const toggleRoutes = ()=>{
                 Where To?
               </label>
               <label className="login-button" htmlFor="login">
-                Login
+                <Link to="/user/login">Login</Link>
               </label>
             </div>
             {choosingDestination ? ( <div className="DestinationPicker">

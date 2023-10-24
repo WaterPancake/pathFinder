@@ -20,7 +20,7 @@ export const useLogin = () =>{
             const response = await fetch('/user/login',{
                 method:'POST',
                 headers: {'Content-Type': 'application/json'},
-                body:JSON.stringify({ Email: email, Password: password })
+                body:JSON.stringify({email, password })
             })
     
             const json =  await response.json()
@@ -35,15 +35,17 @@ export const useLogin = () =>{
             if(response.ok)
             {
                 setIsLoading(false)
+                alert(json.mssg, json.userAccount)
+
                 // dispatch({type:"LOGIN", payload:json})
-                localStorage.setItem('user',JSON.stringify(json))
+                // localStorage.setItem('user',JSON.stringify(json))
             }
             
         }
 
 
     }    
-    return{isLoading, login, error}
+    return{isLoading, login, error, setError}
 }
 
  

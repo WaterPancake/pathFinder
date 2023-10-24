@@ -205,8 +205,7 @@ const newCalculateRoute = () =>{
       setDistance(result.routes[0].legs[0].distance.text);
       setDuration(result.routes[0].legs[0].duration.text);
       setDirectionsArray([result])
-      fetchNodesAlongRoute(result
-        )
+      fetchNodesAlongRoute(result)
       console.log(directionsArray)
 
     };
@@ -264,10 +263,10 @@ const fetchNodesAlongRoute = (directionRouteResult) =>{
     // Calculate the marker interval (every 5th of the route)
     const routePath = directionRouteResult.routes[0].overview_path;
     const totalDistance = window.google.maps.geometry.spherical.computeLength(routePath);
-    const markerIntervalMeters = totalDistance / 5;
+    const markerIntervalMeters = totalDistance / 6;
   
     let remainingDistance = markerIntervalMeters;
-    let markerCount = 1;
+    let markerCount = 0;
   
     for (let i = 0; i < routePath.length - 1; i++) {
       const startPoint = routePath[i];
@@ -290,10 +289,12 @@ const fetchNodesAlongRoute = (directionRouteResult) =>{
           map: map,
           title: 'Marker',
         });
+        
         // const geoPoint = {lng:markerPosition.lng(), lat:markerPosition.lat()}
         // setTestWaypoints(prev => prev.concat(geoPoint))
-        setRouteNodes((nodeArray)=> [...nodeArray,{key: markerCount,lat:markerPosition.lat(), lng:markerPosition.lng()}])
-        console.log(`Marker ${markerCount } - Position: lat: ${markerPosition.lat()}, lng: ${markerPosition.lng()}`);
+        const waypoint = {key: markerCount,lat:markerPosition.lat(), lng:markerPosition.lng()}
+        setRouteNodes((nodeArray)=> [...nodeArray,waypoint])
+        console.log(`Marker ${markerCount+ 1 } - Position: lat: ${markerPosition.lat()}, lng: ${markerPosition.lng()}`);
         markerCount++;
   
         // Move to the next marker interval

@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-// import { GoogleMap, useJsApiLoader, MarkerF, DirectionsRenderer,÷ Autocomplete } from '@react-google-maps/api';
 import {useJsApiLoader,Autocomplete } from '@react-google-maps/api';
 
 import '../Styles/PathFinderMainPage.css';
@@ -13,10 +12,6 @@ const PathFinderMainPage = () => {
   });
 
   const [showMap, setShowMap] = useState(false);
-  // const mapContainerStyleParameter = {
-  //   width: '100%',
-  //   height: '100%', 
-  // };
 
   const [choosingDestination, setChoosingDestination] = useState(false);
   const [origin, setOrigin] = useState(null);
@@ -146,11 +141,7 @@ const PathFinderMainPage = () => {
       }
     }
   };
-  // useEffect(()=>{
-  //   testWaypoints.forEach((object)=>{
-  //     console.log(JSON.stringify(object))
-  //   })
-  // },[testWaypoints])
+
 
   // Calculate and display the route between origin and destination
   // const calculateRoute = async () => {
@@ -220,6 +211,7 @@ const newCalculateRoute = () =>{
     if(status === 'OK'){
       directionRenderer.setMap(map)
       directionRenderer.setDirections(result)
+      getWaypointsaLongRoute(result);
       setDistance(result.routes[0].legs[0].distance.text);
       setDuration(result.routes[0].legs[0].duration.text);
       setDirectionsArray([result])
@@ -238,7 +230,48 @@ const newClearRoute = () =>{
 
 
 }
+const getWaypointsaLongRoute = (pathResult) => {
 
+  // Calculate the marker interval (every 5th of the route)
+  const pathResult = testResult.routes[0].overview_path;
+  const totalDistance = window.google.maps.geometry.spherical.computeLength(routePath);
+  const markerIntervalMeters = totalDistance / 5;
+
+  let remainingDistance = markerIntervalMeters;
+  let markerCount = 0;
+
+  for (let i = 0; i < routePath.length - 1; i++) {
+    const startPoint = routePath[i];
+    const endPoint = routePath[i + 1];
+    const segmentDistance = window.google.maps.geometry.spherical.computeDistanceBetween(startPoint, endPoint);
+
+    if (segmentDistance < remainingDistance) {
+      remainingDistance -= segmentDistance;
+    } else {
+      // Calculate the position of the marker along the current segment
+      const fraction = remainingDistance / segmentDistance;
+      const markerPosition = new window.google.maps.LatLng(
+        startPoint.lat() + fraction * (endPoint.lat() - startPoint.lat()),
+        startPoint.lng() + fraction * (endPoint.lng() - startPoint.lng())
+      );
+
+      // Place a marker at the markerPosition
+      new window.google.maps.Marker({
+        position: markerPosition,
+        map: map,
+        title: 'Marker',
+      });
+      const geoPoint = {lng:markerPosition.lng(), lat:markerPosition.lat()}
+      setTestWaypoints(prev => prev.concat(geoPoint))
+
+      console.log(`Marker ${markerCount + 1} - Position: lat: ${markerPosition.lat()}, lng: ${markerPosition.lng()}`);
+      markerCount++;
+
+      // Move to the next marker interval
+      remainingDistance = markerIntervalMeters - segmentDistance + remainingDistance;
+    }
+  }
+}
 
   return (
     <div className="PathFinderMapPage">

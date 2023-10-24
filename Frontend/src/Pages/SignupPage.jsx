@@ -11,12 +11,10 @@ const SignupPage = () => {
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfrimPassword] = useState('')
     const [emptyFields, setEmtpyFields] = useState([])
-    const [agreement, setAgreement] = useState(false)
-    const {isLoading, error, signup, setError} = useSignup()
+    const [isAgreementChecked, setIsAgreementChecked] = useState(false)
+    const {isLoading, error, signup, setError, setIsLoading} = useSignup()
 
-   
-    // const {isLoading, error, signup,setError} = useSignup()
-    const areAllFieldsFilled =() =>{
+        const areAllFieldsFilled =() =>{
    
         if(!firstName)
         {
@@ -48,7 +46,7 @@ const SignupPage = () => {
         }
     }
     const handleAgreementCheck = (e) =>{
-        setAgreement(e.target.checked)
+        setIsAgreementChecked(e.target.checked)
     }
 
     const handleSignup = async  (e) =>{
@@ -62,6 +60,7 @@ const SignupPage = () => {
             
             if(password === confirmPassword)
             {
+                setIsLoading(true)
                 signup(email,password, firstName, lastName);
             }
             else{
@@ -110,13 +109,13 @@ const SignupPage = () => {
                     className={emptyFields.includes('confirm-password') ? 'error': 'confrim-password'}/> <br />
 
                     <input type="checkbox"
-                    value={agreement}
+                    value={isAgreementChecked}
                     onChange={handleAgreementCheck} />
                     <label htmlFor="">
                     I accept the <a href="/">Privacy Policy</a> and the <a href="/">Terms of Service</a></label> <br/>
                     {error && <div className="error">{error}</div> }
                     {/* <button disabled={(!agreement)} onClick={handleSignup}>Sign up</button> */}
-                    <button disabled={(!agreement && !isLoading)} onClick={(e)=> handleSignup(e)}>Sign up</button>
+                    <button disabled={(isLoading || !isAgreementChecked )} onClick={(e)=> handleSignup(e)}>Sign up</button>
                     
                 </form>
             </div>

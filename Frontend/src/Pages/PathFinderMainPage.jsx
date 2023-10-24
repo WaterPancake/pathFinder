@@ -26,7 +26,9 @@ const PathFinderMainPage = () => {
   const [directionService, setDirectionService] = useState(/** @type google.maps.DirectionsService */ (null));
   const [directionRenderer, setDirectionRenderer] = useState(/** @type google.maps.DirectionsRenderer */(null));
   const [directionsArray, setDirectionsArray] = useState([]);
+  const [routeNodes, setRouteNodes] = useState([])
   const [pickRoute, setPickRoute] = useState(0)
+  
 
   const mapDivRef = useRef(null)
   /** @type React.MutableRefObject<HTMLInputElement> */
@@ -161,18 +163,7 @@ const PathFinderMainPage = () => {
   //   fetchPlacesAlongRoute(results.routes[0].overview_path);
   // };
 
-  // Clear the route and related information
-  // const clearRoute = () => {
-  //   setDirectionResponse(null);
-  //   setDistance('');
-  //   setDuration('');
-  //   originRef.current.value = '';
-  //   destinationRef.current.value = '';
-  // };
-//   const handleOriginPicker = (e) =>{
-
-//   }
-
+  
 useEffect(()=>{
   
   if(isLoaded && showMap)
@@ -195,6 +186,7 @@ useEffect(()=>{
   
 },[isLoaded,showMap,location])
 
+// Calculate and display the route between origin and destination
 const newCalculateRoute = () =>{
   if(!originRef.current.value || !destinationRef.current.value){
     alert('Both fields must be filled');
@@ -230,6 +222,8 @@ const newCalculateRoute = () =>{
     setDuration(null)
     directionRenderer.setMap(null)
     setDirectionsArray([])
+    setRouteNodes([])
+
   };
   
 const addWaypoint = () =>{
@@ -273,7 +267,7 @@ const fetchNodesAlongRoute = (directionRouteResult) =>{
     const markerIntervalMeters = totalDistance / 5;
   
     let remainingDistance = markerIntervalMeters;
-    let markerCount = 0;
+    let markerCount = 1;
   
     for (let i = 0; i < routePath.length - 1; i++) {
       const startPoint = routePath[i];
@@ -298,8 +292,8 @@ const fetchNodesAlongRoute = (directionRouteResult) =>{
         });
         // const geoPoint = {lng:markerPosition.lng(), lat:markerPosition.lat()}
         // setTestWaypoints(prev => prev.concat(geoPoint))
-  
-        console.log(`Marker ${markerCount + 1} - Position: lat: ${markerPosition.lat()}, lng: ${markerPosition.lng()}`);
+        setRouteNodes((nodeArray)=> [...nodeArray,{key: markerCount,lat:markerPosition.lat(), lng:markerPosition.lng()}])
+        console.log(`Marker ${markerCount } - Position: lat: ${markerPosition.lat()}, lng: ${markerPosition.lng()}`);
         markerCount++;
   
         // Move to the next marker interval
@@ -343,6 +337,9 @@ const fetchNodesAlongRoute = (directionRouteResult) =>{
                 <button onClick={()=> newClearRoute()}>Clear Route</button>
                 <button onClick={()=> addWaypoint()}>Add Waypoint Route</button>
                 <button onClick={()=>toggleRoutes()}>toggle routes</button>
+                                {routeNodes.map((object) => (
+                  <label key={object.id}>Lat: {object.lat}, Lng: {object.lng}</label>
+                ))}
                 {/* <button onClick={createAlbanyRoute}>Creare Albany Route</button> */}
             </div>
         </div>

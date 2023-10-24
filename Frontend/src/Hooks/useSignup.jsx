@@ -16,14 +16,14 @@ export const useSignup = () =>{
         const response = await fetch('/user/signup',{
             method:'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({Email:email, Password:password, First_Name:firstName, Last_Name:lastName})
+            body: JSON.stringify({email,password,firstName,lastName})
         })
 
-        const json =  await response.json()
+        const json =  await response.json() 
 
         if(!response.ok)
         {
-            setError(json.error)
+            setError(json.error) 
             setIsLoading(false)
         }
         if(response.ok)
@@ -31,7 +31,7 @@ export const useSignup = () =>{
             setIsLoading(false)
             // dispatch({type:'LOGIN', payload:json})
             // localStorage.setItem('user',JSON.stringify(json))
-            alert("Successfully signed up")
+            alert(json.mssg, json.userAccount)
 
         }
 

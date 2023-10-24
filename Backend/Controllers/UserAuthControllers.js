@@ -48,6 +48,7 @@ const userLogin = async (req, res) =>{
 }
 
 const userSignup = async(req, res) =>{ 
+    console.log("called")
     const userRef = db.collection('User_Accounts')
 
     const {firstName,lastName, email, password } = req.body;

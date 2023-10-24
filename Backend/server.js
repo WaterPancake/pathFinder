@@ -28,3 +28,8 @@ app.post('/test-ml-call', async(req,res)=>{
     console.log(req.body)
     
 })
+
+
+app.use('*', (req, res) => {
+    res.status(404).json({error:"Resource not found"});
+  });

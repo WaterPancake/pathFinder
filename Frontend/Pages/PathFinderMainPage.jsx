@@ -11,25 +11,37 @@ const PathFinderMainPage = () => {
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
     libraries: ['places'],
   });
-
+/**Boolean for deciding if you want the map to Render
+ * TO BE REMOVED IN FINAL PRODUCT
+ */
   const [showMap, setShowMap] = useState(false);
-
-  const [choosingDestination, setChoosingDestination] = useState(false);
+/**Booleand for deciding if you want to show the origin and destination picker */
+  const [showDestinationPicker, setShoeDestinationPicker] = useState(false);
+  /**Holds the geolocation(latitiude and longiutude), for the user current location, if it can be found */
   const [location, setLocation] = useState(null);
+  /**Holds the google maps object of type window.google.maps.Maps */
   const [map, setMap] = useState(/** @type google.maps.Map */ (null));
-
+/**Boolean fo showing if the users current location is being located */
   const [isGettingCurrentLocation, setIsGettingCurrentLocation] = useState(false);
-
+/**Holds the value for the distance of the route */
   const [distance, setDistance] = useState('');
+  /**Holds the value for the duration in minutes fior a route */
   const [duration, setDuration] = useState('');
-
+/**Google Maps API. Hofls the object that will be calculating a route based on origin and destination
+ * of @type google.maps.DirectionService
+ */
   const [directionService, setDirectionService] = useState(/** @type google.maps.DirectionsService */ (null));
+  /**Google Maps API. Holds the object that will be used to render a route to the map. 
+   * of @type window.google.maps.DirectionRenderer
+   */
   const [directionRenderer, setDirectionRenderer] = useState(/** @type google.maps.DirectionsRenderer */(null));
-  const [directionsArray, setDirectionsArray] = useState([]);
-  const [routeNodes, setRouteNodes] = useState([])
-  const [pickRoute, setPickRoute] = useState(0)
-  
 
+  const [directionsArray, setDirectionsArray] = useState([]);
+  const [nodesAlongRoute, setNodesAlongRoute] = useState([]);
+  const [pickRoute, setPickRoute] = useState(0);
+  const [calculatedRoutes, setCalculatedRoutes] = useState([]);
+  
+/**Is a reference to the div that will be containting the map */
   const mapDivRef = useRef(null)
   /** @type React.MutableRefObject<HTMLInputElement> */
   const originRef = useRef(null)
@@ -38,7 +50,7 @@ const PathFinderMainPage = () => {
 
 
   const handleWhereToButtonClick = () => {
-    setChoosingDestination(!choosingDestination);
+    setShoeDestinationPicker(!showDestinationPicker);
   };
 
   const center = { lat: 40.7678, lng: -73.9645 };
@@ -177,8 +189,7 @@ useEffect(()=>{
 
     setDirectionService(new window.google.maps.DirectionsService());
     setDirectionRenderer(new window.google.maps.DirectionsRenderer());
-    // console.log(`map is ${map}`)
-    console.log("called")
+  
      
     
 
@@ -191,6 +202,7 @@ const newCalculateRoute = () =>{
   if(!originRef.current.value || !destinationRef.current.value){
     alert('Both fields must be filled');
   };
+  newClearRoute()
   const origin = originRef.current.value;
   const destination = destinationRef.current.value;
   const request = {
@@ -221,7 +233,7 @@ const newCalculateRoute = () =>{
     setDuration(null)
     directionRenderer.setMap(null)
     setDirectionsArray([])
-    setRouteNodes([])
+    setNodesAlongRoute([])
 
   };
   
@@ -245,6 +257,7 @@ const addWaypoint = () =>{
       setDistance(result.routes[0].legs[0].distance.text);
       setDuration(result.routes[0].legs[0].duration.text);
       setDirectionsArray((array)=>[...array,result])
+      setCalculatedRoutes([])
       console.log(directionsArray)
 
     };
@@ -292,20 +305,31 @@ const fetchNodesAlongRoute = (directionRouteResult) =>{
         
         // const geoPoint = {lng:markerPosition.lng(), lat:markerPosition.lat()}
         // setTestWaypoints(prev => prev.concat(geoPoint))
-        const waypoint = {key: markerCount,lat:markerPosition.lat(), lng:markerPosition.lng()}
-        setRouteNodes((nodeArray)=> [...nodeArray,waypoint])
-        console.log(`Marker ${markerCount+ 1 } - Position: lat: ${markerPosition.lat()}, lng: ${markerPosition.lng()}`);
+        const waypoint = {key: markerCount,lat:markerPosition.lat(), lng:markerPosition.lng()};
+        setNodesAlongRoute((nodeArray)=> [...nodeArray,waypoint]);
+        // console.log(`Marker ${markerCount+ 1 } - Position: lat: ${markerPosition.lat()}, lng: ${markerPosition.lng()}`);
         markerCount++;
   
         // Move to the next marker interval
         remainingDistance = markerIntervalMeters - segmentDistance + remainingDistance;
       }
     }
-}
-  return (
+};
+const generateRoutesForUser = async()=>{
+    const results = await fetch('/pathFinder/generate-routes',{
+      method: 'POST',
+      headers:{'Content-Type': 'application/json'},
+      body: JSON.stringify(nodesAlongRoute)
+    });
+    console.log(results);
+    setCalculatedRoutes(results.routeWayPoints);
+    results.routeWaypoints.forEach((route)=>{
+      
+    })
+};
+    return (
     <div className="PathFinderMapPage">
       {isGettingCurrentLocation ? <div className="getting-current-location">Getting Current Location...</div> : null}
-      {/* <button onClick={() => setShowMap((toggle) => !toggle)}>Render Map</button> */}
       <button onClick={() => setShowMap(!showMap)}>Render Map</button>
       {isLoaded ? ( 
         <div className="path-finder">
@@ -320,7 +344,7 @@ const fetchNodesAlongRoute = (directionRouteResult) =>{
                 <Link to="/user/login">Login</Link>
               </label>
             </div>
-            {choosingDestination ? ( <div className="DestinationPicker">
+            {showDestinationPicker ? ( <div className="DestinationPicker">
                 <Autocomplete>
                     <input ref={originRef} type="text" name="" id="" placeholder="Choose a starting location..."  />
                 </Autocomplete>
@@ -332,16 +356,20 @@ const fetchNodesAlongRoute = (directionRouteResult) =>{
                 <label htmlFor="">Duration: {duration} </label>
                 <label htmlFor="">Distance: {distance} </label>
                 <button onClick={() => map.panTo(center)}>reset</button>
-                <button onClick={() => console.log(isLoaded, showMap)}>console</button>
+                <button onClick={() => console.log(originRef.current.value, destinationRef.current.value)}>console</button>
                 {/* <button onClick={getLocation}>location</button> */}
                 <button onClick={()=>newCalculateRoute()}>Calculate Route</button>
                 <button onClick={()=> newClearRoute()}>Clear Route</button>
                 <button onClick={()=> addWaypoint()}>Add Waypoint Route</button>
+                <button onClick={()=> generateRoutesForUser()}>Find Routes</button>
                 <button onClick={()=>toggleRoutes()}>toggle routes</button>
-                                {routeNodes.map((object) => (
+                                {nodesAlongRoute.map((object) => (
                   <label key={object.id}>Lat: {object.lat}, Lng: {object.lng}</label>
                 ))}
                 {/* <button onClick={createAlbanyRoute}>Creare Albany Route</button> */}
+            </div>
+            <div className="display-generated-routes">
+
             </div>
         </div>
       ) : null}

@@ -46,7 +46,7 @@ const SignupPage = () => {
         }
     }
     const handleAgreementCheck = (e) =>{
-        setIsAgreementChecked(e.target.checked)
+        setIsAgreementChecked(e.target.checked) 
     }
 
     const handleSignup = async  (e) =>{

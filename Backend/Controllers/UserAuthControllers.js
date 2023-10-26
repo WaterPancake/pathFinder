@@ -11,11 +11,11 @@ const checkIsEmailInUse = async(email, checkAndRetrieve = false) =>{
             return (false);
         }
         else{
-            return checkAndRetrieve ? {isInUse:true, Document:querySnapshot} : true
+            return (checkAndRetrieve ? {isInUse:true, Document:querySnapshot} : true);
         }
         
    } catch (error) {
-    throw(error)
+    throw(error);
     
    }
 }

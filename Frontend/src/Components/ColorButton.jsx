@@ -2,6 +2,7 @@ import { useState } from 'react';
 import '../Styles/UserPreference.css';
 
 const ColorButton = ({ label, target, isVisible, toggleVisible }) => {
+
     const [isClicked, setIsClicked] = useState(false);
   
     const handleClick = () => {

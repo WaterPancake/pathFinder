@@ -27,19 +27,26 @@ const PathFinderMainPage = () => {
   const [distance, setDistance] = useState('');
   /**Holds the value for the duration in minutes fior a route */
   const [duration, setDuration] = useState('');
-/**Google Maps API. Hofls the object that will be calculating a route based on origin and destination
+/**Google Maps API. Holds the object that will be calculating a route based on origin and destination
  * of @type google.maps.DirectionService
  */
   const [directionService, setDirectionService] = useState(/** @type google.maps.DirectionsService */ (null));
-  /**Google Maps API. Holds the object that will be used to render a route to the map. 
+  /**Google Maps API. Holds the object that will be used to render the original route to the map. 
    * of @type window.google.maps.DirectionRenderer
    */
   const [directionRenderer, setDirectionRenderer] = useState(/** @type google.maps.DirectionsRenderer */(null));
 
+  // const [directionRenderForCalculatedRoutes, setDirectionRenderForCalculatedRoutes] = useState(/** @type {Array<google.maps.DirectionsRenderer>}  */[]);
+
   const [directionsArray, setDirectionsArray] = useState([]);
   const [nodesAlongRoute, setNodesAlongRoute] = useState([]);
   const [pickRoute, setPickRoute] = useState(0);
-  const [calculatedRoutes, setCalculatedRoutes] = useState([]);
+
+  /**Holds the lng lat object array for each route */
+  const [calculatedRouteWaypoints, setCalculatedRouteWaypoints] = useState([]);
+
+  /**Routes generated from the way points calculated fro the ML api */
+  const [generatedRoutes, setGeneratedRoutes] = useState([])
   
 /**Is a reference to the div that will be containting the map */
   const mapDivRef = useRef(null)
@@ -76,105 +83,6 @@ const PathFinderMainPage = () => {
     
     
   }, []);
-
-  
-
-  // Function to fetch places along the route
-  // const fetchPlacesAlongRoute = (routePath) => {
-  //   const placesService = new window.google.maps.places.PlacesService(map);
-  //   const radiusMeters = 1609.34 * 10; // 10 miles in meters
-
-  //   routePath.forEach((point) => {
-  //     const request = {
-  //       location: point,
-  //       radius: radiusMeters,
-  //       type: ['restaurant', 'gas_station', 'landmark'], // Specify the types of places you want
-  //     };
-
-  //     placesService.nearbySearch(request, (results, status) => {
-  //       if (status === 'OK') {
-  //         console.log('Places along the route:', results);
-  //       } else {
-  //         console.error('Places request failed:', status);
-  //       }
-  //     });
-  //   });
-  // };
- 
-
-  // const createAlbanyRoute = async () => {
-  //   const directionServiceTest = new window.google.maps.DirectionsService();
-  //   const albanyRoute = {
-  //     origin: { lat: 40.7678, lng: -73.9654 },
-  //     destination: { lat: 42.6526, lng: -73.7562 },
-  //     travelMode: 'DRIVING',
-  //   };
-  //   const testResult = await directionServiceTest.route(albanyRoute);
-  //   setAlbanyTestRoute(testResult);
-  
-  //   // Calculate the marker interval (every 5th of the route)
-  //   const routePath = testResult.routes[0].overview_path;
-  //   const totalDistance = window.google.maps.geometry.spherical.computeLength(routePath);
-  //   const markerIntervalMeters = totalDistance / 5;
-  
-  //   let remainingDistance = markerIntervalMeters;
-  //   let markerCount = 0;
-  
-  //   for (let i = 0; i < routePath.length - 1; i++) {
-  //     const startPoint = routePath[i];
-  //     const endPoint = routePath[i + 1];
-  //     const segmentDistance = window.google.maps.geometry.spherical.computeDistanceBetween(startPoint, endPoint);
-  
-  //     if (segmentDistance < remainingDistance) {
-  //       remainingDistance -= segmentDistance;
-  //     } else {
-  //       // Calculate the position of the marker along the current segment
-  //       const fraction = remainingDistance / segmentDistance;
-  //       const markerPosition = new window.google.maps.LatLng(
-  //         startPoint.lat() + fraction * (endPoint.lat() - startPoint.lat()),
-  //         startPoint.lng() + fraction * (endPoint.lng() - startPoint.lng())
-  //       );
-  
-  //       // Place a marker at the markerPosition
-  //       new window.google.maps.Marker({
-  //         position: markerPosition,
-  //         map: map,
-  //         title: 'Marker',
-  //       });
-  //       const geoPoint = {lng:markerPosition.lng(), lat:markerPosition.lat()}
-  //       setTestWaypoints(prev => prev.concat(geoPoint))
-  
-  //       console.log(`Marker ${markerCount + 1} - Position: lat: ${markerPosition.lat()}, lng: ${markerPosition.lng()}`);
-  //       markerCount++;
-  
-  //       // Move to the next marker interval
-  //       remainingDistance = markerIntervalMeters - segmentDistance + remainingDistance;
-  //     }
-  //   }
-  // };
- 
-  
-  // Calculate and display the route between origin and destination
-  // const calculateRoute = async () => {
-  //   if (originRef.current.value === '' || destinationRef.current.value === '') {
-  //     return;
-  //   }
-
-  //   const directionService = new window.google.maps.DirectionsService();
-  //   const results = await directionService.route({
-  //     origin: originRef.current.value,
-  //     destination: destinationRef.current.value,
-  //     travelMode: 'DRIVING',
-  //   });
-
-  //   setDirectionResponse(results);
-  //   setDistance(results.routes[0].legs[0].distance.text);
-  //   setDuration(results.routes[0].legs[0].duration.text);
-
-  //   // Call a function to fetch places within a radius along the route
-  //   fetchPlacesAlongRoute(results.routes[0].overview_path);
-  // };
-
   
 useEffect(()=>{
   
@@ -199,10 +107,14 @@ useEffect(()=>{
 
 // Calculate and display the route between origin and destination
 const newCalculateRoute = () =>{
+  setDistance(null)
+  setDuration(null)
+  directionRenderer.setMap(null)
+  setDirectionsArray([])
+  setNodesAlongRoute([])
   if(!originRef.current.value || !destinationRef.current.value){
     alert('Both fields must be filled');
   };
-  newClearRoute()
   const origin = originRef.current.value;
   const destination = destinationRef.current.value;
   const request = {
@@ -218,7 +130,7 @@ const newCalculateRoute = () =>{
       setDuration(result.routes[0].legs[0].duration.text);
       setDirectionsArray([result])
       fetchNodesAlongRoute(result)
-      console.log(directionsArray)
+      // console.log(directionsArray)
 
     };
 
@@ -226,17 +138,17 @@ const newCalculateRoute = () =>{
 
 };
   // Clear the route and related information
-  const newClearRoute = () =>{
-    originRef.current.value = '';
-    destinationRef.current.value = '';
-    setDistance('')
-    setDuration(null)
-    directionRenderer.setMap(null)
-    setDirectionsArray([])
-    setNodesAlongRoute([])
+const newClearRoute = () =>{
+  originRef.current.value = '';
+  destinationRef.current.value = '';
+  setDistance(null)
+  setDuration(null)
+  directionRenderer.setMap(null)
+  setDirectionsArray([])
+  setNodesAlongRoute([])
 
-  };
-  
+};
+
 const addWaypoint = () =>{
   const wayPoint = {location:{lat:40.7484, lng:-73.985428}, stopover:true}
   if(!originRef.current.value || !destinationRef.current.value){
@@ -257,7 +169,8 @@ const addWaypoint = () =>{
       setDistance(result.routes[0].legs[0].distance.text);
       setDuration(result.routes[0].legs[0].duration.text);
       setDirectionsArray((array)=>[...array,result])
-      setCalculatedRoutes([])
+      setGeneratedRoutes((array)=>[...array,directionsArray[0],result])
+      setCalculatedRouteWaypoints([])
       console.log(directionsArray)
 
     };
@@ -268,7 +181,7 @@ const toggleRoutes = ()=>{
  if(directionsArray.length>1){ 
     directionRenderer.setDirections(directionsArray[pickRoute]);
     // console.log(pickRoute,directionsArray.length)
-    setPickRoute((index)=> ((index +1)%directionsArray.length))
+    setPickRoute((index)=> ((index +1)%directionsArray.length));
   }
 }
 const fetchNodesAlongRoute = (directionRouteResult) =>{
@@ -296,12 +209,12 @@ const fetchNodesAlongRoute = (directionRouteResult) =>{
           startPoint.lng() + fraction * (endPoint.lng() - startPoint.lng())
         );
   
-        // Place a marker at the markerPosition
-        new window.google.maps.Marker({
-          position: markerPosition,
-          map: map,
-          title: 'Marker',
-        });
+        // // Place a marker at the markerPosition
+        // new window.google.maps.Marker({
+        //   position: markerPosition,
+        //   map: map,
+        //   title: 'Marker',
+        // });
         
         // const geoPoint = {lng:markerPosition.lng(), lat:markerPosition.lat()}
         // setTestWaypoints(prev => prev.concat(geoPoint))
@@ -314,19 +227,56 @@ const fetchNodesAlongRoute = (directionRouteResult) =>{
         remainingDistance = markerIntervalMeters - segmentDistance + remainingDistance;
       }
     }
+    setNodesAlongRoute((nodeArray)=>nodeArray.slice(0,-1))
 };
 const generateRoutesForUser = async()=>{
+    setCalculatedRouteWaypoints([])
+    //URL to be changbed
     const results = await fetch('http://localhost:8000/pathFinder/generate-routes',{
       method: 'POST',
       headers:{'Content-Type': 'application/json'},
       body: JSON.stringify(nodesAlongRoute)
     });
-    console.log(results);
-    setCalculatedRoutes(results.routeWayPoints);
+
+    /**This Calculates a route for each set of waypoints from the api */
+    //Get the origin coordinates
+    const origin = originRef.current.value;
+    //get the destination coordinates
+    const destination = destinationRef.current.value;
+    //results.routeWayPoints is subject to change
+    setCalculatedRouteWaypoints(results.routeWayPoints);
+    //For each array of waypoints
     results.routeWaypoints.forEach((route)=>{
-      
+      let stopoverWaypoints = []
+      //creates a waypoint object and saves it to an array 
+      route.forEach((waypoint)=>{
+          stopoverWaypoints.push({location:waypoint, stopover:true});
+      })
+      //create the DirectionService request object
+      const request = {
+        origin,
+        destination,
+        travelMode: 'DRIVING',
+        waypoint:stopoverWaypoints,
+        optimizeWaypoints: true
+      };
+      //Uses the directionService.route to generate a route and saves it to generated route
+      directionService.route(request, (result,status) =>{
+        if(status === 'OK')
+        {
+          setGeneratedRoutes((prev)=>[...prev,result]);
+
+        }
+      })
     })
 };
+const selectRoute = (routeIndex)=>{
+  console.log(calculatedRouteWaypoints);
+  directionRenderer.setDirections(generatedRoutes[routeIndex]);
+  setDistance(generatedRoutes[routeIndex].routes[0].legs[0].distance.text);
+  setDuration(generatedRoutes[routeIndex].routes[0].legs[0].duration.text);
+
+}
     return (
     <div className="PathFinderMapPage">
       {isGettingCurrentLocation ? <div className="getting-current-location">Getting Current Location...</div> : null}
@@ -368,9 +318,13 @@ const generateRoutesForUser = async()=>{
                 ))}
                 {/* <button onClick={createAlbanyRoute}>Creare Albany Route</button> */}
             </div>
-            <div className="display-generated-routes">
-
-            </div>
+            {generatedRoutes.length>0 && <div className="display-generated-routes">
+              {generatedRoutes.map((route,index) =>{
+                return(<div key={index} className="route-details">
+                  <button className='select-route-button' onClick={()=>selectRoute(index)}>{`route ${index+1}`}</button>
+                </div>)
+              })}
+            </div>}
         </div>
       ) : null}
     </div>

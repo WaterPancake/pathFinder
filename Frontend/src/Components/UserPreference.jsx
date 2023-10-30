@@ -90,7 +90,7 @@ const UserPreference = () => {
       )}
 
       <PriceBar/>
-      <button onClick={sendDataToBackend}>Submit</button>
+      <button id="submit" onClick={sendDataToBackend}>Submit</button>
     </div>
   );
 };

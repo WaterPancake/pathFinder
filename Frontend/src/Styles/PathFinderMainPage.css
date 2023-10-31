@@ -1,0 +1,73 @@
+body{
+    background-color: rgba(32,34,40,255);
+    padding: 20px;
+
+}
+.path-finder{
+    height: 90vh;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    border-color: 5px solid black;
+}
+
+.main-container, .destination-calculator{
+    height: auto;
+    border-radius: 20px;
+    background-image: url('https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNmtucWRzb3l0ODFpaG9naHNicjNscDBxcmo2cHpuMnR0amdvNnc0aCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/cQbGMCkT1PZszSNw5F/giphy-downsized-large.gif');
+    background-size: cover;
+    background-repeat: no-repeat;
+    /* background-attachment: fixed; */
+}
+
+.main-container{
+    background-color: rgba(80, 145, 188, 0.924);
+    border-color: 10px solid black;
+}
+.destination-calculator{
+    border: 1px solid black;
+    padding: 20px;
+    box-sizing: content-box;
+}
+.destination-calculator-header-buttons{
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 10px;
+}
+.destination-calculator-header-buttons label, .customize-trip-button{
+    padding: 15px 20px;
+    background-color: grey;
+    border-radius: 15px;
+    font-size: 20px;
+    user-select: none;
+
+    /* margin-left: 10px; */
+}
+.destination-calculator-header-buttons label:hover{
+    cursor: pointer;
+}
+.destination-picker{
+    display: flex;
+    flex-direction: column;
+    margin-top:10px;
+}
+.destination-calculator input[type='text']{
+    border-radius: 10px;
+    border: 1px solid black;
+    font-size: 20px;
+    margin-bottom: 10px;
+    padding: 10px;
+    width: 100%;
+    box-sizing: border-box;
+}
+.destination-calculator input:focus{
+    border-radius: 2px solid rgb(1, 1, 13);
+}
+.customize-trip{
+    margin-top: 30px;
+}
+.getting-current-location{
+    width: 100%;
+}
+label{
+    color:whitesmoke;
+}

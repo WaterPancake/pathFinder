@@ -114,3 +114,12 @@
     cursor: pointer;
     font-weight: 500;
 }
+
+.submit:hover {
+    background-color: #71707d;
+}
+
+.submit.clicked {
+    background-color: rgb(3, 3, 3);
+    color:#f4f4f4;
+}

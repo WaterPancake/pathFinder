@@ -13,7 +13,6 @@ body{
 .main-container, .destination-calculator{
     height: auto;
     border-radius: 20px;
-    background-image: url('https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNmtucWRzb3l0ODFpaG9naHNicjNscDBxcmo2cHpuMnR0amdvNnc0aCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/cQbGMCkT1PZszSNw5F/giphy-downsized-large.gif');
     background-size: cover;
     background-repeat: no-repeat;
     /* background-attachment: fixed; */
@@ -27,6 +26,7 @@ body{
     border: 1px solid black;
     padding: 20px;
     box-sizing: content-box;
+    background-image: url('https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNmtucWRzb3l0ODFpaG9naHNicjNscDBxcmo2cHpuMnR0amdvNnc0aCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/cQbGMCkT1PZszSNw5F/giphy-downsized-large.gif');
 }
 .destination-calculator-header-buttons{
     display: grid;

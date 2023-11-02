@@ -22,23 +22,23 @@ content-type: application/json
 }
 
 ###
-Post http://localhost:8000/login
+Post http://localhost:8000/user/login
 content-type: application/json
 
 {
     "firstName":"Tahj",
     "lastName":"Serieux",
-    "email":"ABCab@gmail.com",
+    "email":"ABCab1@gmail.com",
     "password":"ABCabc123!@#"
 }
 
 ###
-Post http://localhost:8000/signup
+Post http://localhost:8000/user/signup
 content-type: application/json
 
 {
     "firstName":"Tahj",
     "lastName":"Serieux",
-    "email":"ABCab@gmail.com",
+    "email":"ABCab1@gmail.com",
     "password":"ABCabc123!@#"
 }

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { GoogleMap, useJsApiLoader, MarkerF, DirectionsRenderer, Autocomplete } from '@react-google-maps/api';
+import { GoogleMap, useJsApiLoader, Marker, DirectionsRenderer, Autocomplete } from '@react-google-maps/api';
 import { Link } from 'react-router-dom';
+
 import '../Styles/PathFinderMainPage.css';
 import '../Styles/UserPreference.css';
 
@@ -12,36 +13,30 @@ const PathFinderMainPage = () => {
   });
 
   const [showMap, setShowMap] = useState(false);
-  const mapContainerStyleParameter = {
-    width: '100%',
-    height: '100%', 
-  };
-const [selectedRouteColor, setSelectedRouteColor] = useState(null);
-
-  const [choosingDestination, setChoosingDestination] = useState(false);
-  const [origin, setOrigin] = useState(null);
-  const [destination, setDestination] = useState(null);
+  const [showDestinationPicker, setShowDestinationPicker] = useState(false);
   const [location, setLocation] = useState(null);
   const [map, setMap] = useState(null);
-  const [autoCompleteOrigin, setAutoCompleteOrigin] = useState(null);
-  const [autoCompleteDestination, setAutoCompleteDestination] = useState(null);
   const [isGettingCurrentLocation, setIsGettingCurrentLocation] = useState(false);
-  const [directionResponse, setDirectionResponse] = useState(null);
-  const [albanyTestRoute, setAlbanyTestRoute] = useState(null)
   const [distance, setDistance] = useState('');
   const [duration, setDuration] = useState('');
-  const [testWaypoints, setTestWaypoints] = useState([]) 
+  const [directionService, setDirectionService] = useState(null);
+  const [directionRenderer, setDirectionRenderer] = useState(null);
+  const [directionsArray, setDirectionsArray] = useState([]);
+  const [nodesAlongRoute, setNodesAlongRoute] = useState([]);
+  const [pickRoute, setPickRoute] = useState(0);
+  const [calculatedRouteWaypoints, setCalculatedRouteWaypoints] = useState([]);
+  const [generatedRoutes, setGeneratedRoutes] = useState([]);
 
+  const mapDivRef = useRef(null);
   const originRef = useRef(null);
-  const destinationRef = useRef(null);
+  const destinationRef = useRef();
 
   const handleWhereToButtonClick = () => {
-    setChoosingDestination(!choosingDestination);
+    setShowDestinationPicker(!showDestinationPicker);
   };
 
   const center = { lat: 40.7678, lng: -73.9645 };
 
-  // Use geolocation API to get the user's current location
   useEffect(() => {
     if ('geolocation' in navigator) {
       setIsGettingCurrentLocation(true);
@@ -49,7 +44,7 @@ const [selectedRouteColor, setSelectedRouteColor] = useState(null);
       navigator.geolocation.getCurrentPosition(
         (position) => {
           setLocation({ lat: position.coords.latitude, lng: position.coords.longitude });
-          console.log(`Location is lat: ${position.coords.latitude} lng:${position.coords.longitude} `)
+          console.log(`Location is lat: ${position.coords.latitude} lng:${position.coords.longitude}`);
           setIsGettingCurrentLocation(false);
         },
         (error) => {
@@ -61,159 +56,169 @@ const [selectedRouteColor, setSelectedRouteColor] = useState(null);
     }
   }, []);
 
-  
-
-  // Function to fetch places along the route
-  const fetchPlacesAlongRoute = (routePath) => {
-    const placesService = new window.google.maps.places.PlacesService(map);
-    const radiusMeters = 1609.34 * 10; // 10 miles in meters
-
-    routePath.forEach((point) => {
-      const request = {
-        location: point,
-        radius: radiusMeters,
-        type: ['restaurant', 'gas_station', 'landmark'], // Specify the types of places you want
+  useEffect(() => {
+    if (isLoaded && showMap) {
+      const mapOptions = {
+        zoom: 14,
+        center: location || { lat: 40.748817, lng: -73.9857 },
       };
+      const newMap = new window.google.maps.Map(mapDivRef.current, mapOptions);
+      setMap(newMap);
+      setDirectionService(new window.google.maps.DirectionsService());
+      setDirectionRenderer(new window.google.maps.DirectionsRenderer());
+    }
+  }, [isLoaded, showMap, location]);
 
-      placesService.nearbySearch(request, (results, status) => {
-        if (status === 'OK') {
-          console.log('Places along the route:', results);
-        } else {
-          console.error('Places request failed:', status);
-        }
-      });
-    });
-  };
- 
-
-  const createAlbanyRoute = async () => {
-    const directionServiceTest = new window.google.maps.DirectionsService();
-    const albanyRoute = {
-      origin: { lat: 40.7678, lng: -73.9654 },
-      destination: { lat: 42.6526, lng: -73.7562 },
+  const newCalculateRoute = () => {
+    setDistance(null);
+    setDuration(null);
+    directionRenderer.setMap(null);
+    setDirectionsArray([]);
+    setNodesAlongRoute([]);
+    if (!originRef.current.value || !destinationRef.current.value) {
+      alert('Both fields must be filled');
+    }
+    const origin = originRef.current.value;
+    const destination = destinationRef.current.value;
+    const request = {
+      origin,
+      destination,
       travelMode: 'DRIVING',
     };
-    const testResult = await directionServiceTest.route(albanyRoute);
-    setAlbanyTestRoute(testResult);
-  
-    // Calculate the marker interval (every 5th of the route)
-    const routePath = testResult.routes[0].overview_path;
+    directionService.route(request, (result, status) => {
+      if (status === 'OK') {
+        directionRenderer.setMap(map);
+        directionRenderer.setDirections(result);
+        setDistance(result.routes[0].legs[0].distance.text);
+        setDuration(result.routes[0].legs[0].duration.text);
+        setDirectionsArray([result]);
+        fetchNodesAlongRoute(result);
+      }
+    });
+  };
+
+  const newClearRoute = () => {
+    originRef.current.value = '';
+    destinationRef.current.value = '';
+    setDistance(null);
+    setDuration(null);
+    directionRenderer.setMap(null);
+    setDirectionsArray([]);
+    setNodesAlongRoute([]);
+  };
+
+  const addWaypoint = () => {
+    const wayPoint = { location: { lat: 40.7484, lng: -73.985428 }, stopover: true };
+    if (!originRef.current.value || !destinationRef.current.value) {
+      alert('Both fields must be filled');
+    }
+    const origin = originRef.current.value;
+    const destination = destinationRef.current.value;
+    const request = {
+      origin,
+      destination,
+      travelMode: 'DRIVING',
+      waypoints: [wayPoint],
+    };
+    directionService.route(request, (result, status) => {
+      if (status === 'OK') {
+        directionRenderer.setMap(map);
+        directionRenderer.setDirections(result);
+        setDistance(result.routes[0].legs[0].distance.text);
+        setDuration(result.routes[0].legs[0].duration.text);
+        setDirectionsArray((array) => [...array, result]);
+        setGeneratedRoutes((array) => [...array, directionsArray[0], result]);
+        setCalculatedRouteWaypoints([]);
+      }
+    });
+  };
+
+  const toggleRoutes = () => {
+    if (directionsArray.length > 1) {
+      directionRenderer.setDirections(directionsArray[pickRoute]);
+      setPickRoute((index) => ((index + 1) % directionsArray.length));
+    }
+  };
+
+  const fetchNodesAlongRoute = (directionRouteResult) => {
+    const routePath = directionRouteResult.routes[0].overview_path;
     const totalDistance = window.google.maps.geometry.spherical.computeLength(routePath);
-    const markerIntervalMeters = totalDistance / 5;
-  
+    const markerIntervalMeters = totalDistance / 4;
     let remainingDistance = markerIntervalMeters;
     let markerCount = 0;
-  
+
     for (let i = 0; i < routePath.length - 1; i++) {
       const startPoint = routePath[i];
       const endPoint = routePath[i + 1];
       const segmentDistance = window.google.maps.geometry.spherical.computeDistanceBetween(startPoint, endPoint);
-  
+
       if (segmentDistance < remainingDistance) {
         remainingDistance -= segmentDistance;
       } else {
-        // Calculate the position of the marker along the current segment
         const fraction = remainingDistance / segmentDistance;
         const markerPosition = new window.google.maps.LatLng(
           startPoint.lat() + fraction * (endPoint.lat() - startPoint.lat()),
           startPoint.lng() + fraction * (endPoint.lng() - startPoint.lng())
         );
-  
-        // Place a marker at the markerPosition
+
         new window.google.maps.Marker({
           position: markerPosition,
           map: map,
           title: 'Marker',
         });
-        const geoPoint = {lng:markerPosition.lng(), lat:markerPosition.lat()}
-        setTestWaypoints(prev => prev.concat(geoPoint))
-  
-        console.log(`Marker ${markerCount + 1} - Position: lat: ${markerPosition.lat()}, lng: ${markerPosition.lng()}`);
+
+        const waypoint = { key: markerCount, lat: markerPosition.lat(), lng: markerPosition.lng() };
+        setNodesAlongRoute((nodeArray) => [...nodeArray, waypoint]);
         markerCount++;
-  
-        // Move to the next marker interval
         remainingDistance = markerIntervalMeters - segmentDistance + remainingDistance;
       }
     }
+    setNodesAlongRoute((nodeArray) => nodeArray.slice(0, -1));
   };
-  useEffect(()=>{
-    testWaypoints.forEach((object)=>{
-      console.log(JSON.stringify(object))
-    })
-  },[testWaypoints])
-  
-  // Calculate and display the route between origin and destination
-  const calculateRoute = async () => {
-    if (originRef.current.value === '' || destinationRef.current.value === '') {
-      return;
-    }
 
-    const directionService = new window.google.maps.DirectionsService();
-    const results = await directionService.route({
-      origin: originRef.current.value,
-      destination: destinationRef.current.value,
-      travelMode: 'DRIVING',
+  const generateRoutesForUser = async () => {
+    setCalculatedRouteWaypoints([]);
+    const results = await fetch('http://localhost:8000/pathFinder/generate-routes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(nodesAlongRoute),
     });
 
-    setDirectionResponse(results);
-    setDistance(results.routes[0].legs[0].distance.text);
-    setDuration(results.routes[0].legs[0].duration.text);
+    setCalculatedRouteWaypoints(results.routeWayPoints);
 
-    // Call a function to fetch places within a radius along the route
-    fetchPlacesAlongRoute(results.routes[0].overview_path);
+    results.routeWaypoints.forEach((route) => {
+      let stopoverWaypoints = [];
+      route.forEach((waypoint) => {
+        stopoverWaypoints.push({ location: waypoint, stopover: true });
+      });
+      const request = {
+        origin,
+        destination,
+        travelMode: 'DRIVING',
+        waypoints: stopoverWaypoints,
+        optimizeWaypoints: true,
+      };
+      directionService.route(request, (result, status) => {
+        if (status === 'OK') {
+          setGeneratedRoutes((prev) => [...prev, result]);
+        }
+      });
+    });
   };
 
-  // Clear the route and related information
-  const clearRoute = () => {
-    setDirectionResponse(null);
-    setDistance('');
-    setDuration('');
-    originRef.current.value = '';
-    destinationRef.current.value = '';
+  const selectRoute = (routeIndex) => {
+    directionRenderer.setDirections(generatedRoutes[routeIndex]);
+    setDistance(generatedRoutes[routeIndex].routes[0].legs[0].distance.text);
+    setDuration(generatedRoutes[routeIndex].routes[0].legs[0].duration.text);
   };
-//   const handleOriginPicker = (e) =>{
-
-//   }
-const handleClickRoute = () =>{
-  setSelectedRouteColor('#e60986');
-  console.log(selectedRouteColor)
-  console.log("Clicked Here");
-}
-useEffect(()=>{
-
-},[selectedRouteColor])
-
 
   return (
     <div className="PathFinderMapPage">
       {isGettingCurrentLocation ? <div className="getting-current-location">Getting Current Location...</div> : null}
-      <button onClick={() => setShowMap((toggle) => !toggle)}>Render Map</button>
+      <button onClick={() => setShowMap(!showMap)}>Render Map</button>
       {isLoaded ? (
         <div className="path-finder">
-          <div className="main-container">
-            {showMap ? (
-              isLoaded ? (
-                <GoogleMap
-                  zoom={10}
-                  center={location || { lat: 0, lng: 0 }}
-                  mapContainerStyle={mapContainerStyleParameter}
-                  onLoad={(map) => setMap(map)}
-                  onClick={(event) => console.log(event.latLng.lat(), event.latLng.lng())}
-                >
-                  <MarkerF position={location || { lat: 0, lng: 0 }} />
-                  {directionResponse && (
-                    <DirectionsRenderer
-                      directions={directionResponse}
-                      options={{ polylineOptions: { strokeColor:"#000000" } }}
-                    />
-                  )}                  
-                  {albanyTestRoute && <DirectionsRenderer directions={albanyTestRoute} />}
-                </GoogleMap>
-              ) : (
-                <div className="map-is-loading">Is Loading...</div>
-              )
-            ) : null}
-          </div>
+          <div className="main-container" ref={mapDivRef}></div>
 
           <div className="destination-calculator">
             <div className="destination-calculator-header-buttons">
@@ -221,27 +226,44 @@ useEffect(()=>{
                 Where To?
               </label>
               <label className="login-button" htmlFor="login">
-                <Link to='/user/login'>Login</Link>
+                <Link to="/user/login">Login</Link>
               </label>
             </div>
-            {choosingDestination ? ( <div className="DestinationPicker">
-                <Autocomplete onLoad={(autoComplete) => setAutoCompleteOrigin(autoComplete)} onPlaceChanged={() => setOrigin(autoCompleteOrigin.getPlace().name)}>
-                    <input ref={originRef} type="text" name="" id="" placeholder="Choose a starting location..."  />
+            {showDestinationPicker ? (
+              <div className="DestinationPicker">
+                <Autocomplete>
+                  <input ref={originRef} type="text" name="" id="" placeholder="Choose a starting location..." />
                 </Autocomplete>
-                <Autocomplete onLoad={(autoComplete) => setAutoCompleteDestination(autoComplete)} onPlaceChanged={() => setDestination(autoCompleteDestination.getPlace().name)}>
-                    <input ref={destinationRef} type="text" name="" id="" placeholder="Choose a destination..."  />
+                <Autocomplete>
+                  <input ref={destinationRef} type="text" name="" id="" placeholder="Choose a destination..." />
                 </Autocomplete>
-            </div>): null}
+              </div>
+            ) : null}
             <div className="customize-trip"></div>
-                <label htmlFor="">Duration: {duration} </label>
-                <label htmlFor="">Distance: {distance} </label>
-                <button onClick={() => map.panTo(center)}>reset</button>
-                <button onClick={() => console.log(origin, destination)}>console</button>
-                {/* <button onClick={getLocation}>location</button> */}
-                <button onClick={calculateRoute}>Calculate Route</button>
-                <button onClick={clearRoute}>Clear Route</button>
-                <button onClick={createAlbanyRoute}>Creare Albany Route</button>
+            <label htmlFor="">Duration: {duration} </label>
+            <label htmlFor="">Distance: {distance} </label>
+            <button onClick={() => map.panTo(center)}>reset</button>
+            <button onClick={() => console.log(originRef.current.value, destinationRef.current.value)}>console</button>
+            <button onClick={() => newCalculateRoute()}>Calculate Route</button>
+            <button onClick={() => newClearRoute()}>Clear Route</button>
+            <button onClick={() => addWaypoint()}>Add Waypoint Route</button>
+            <button onClick={() => generateRoutesForUser()}>Find Routes</button>
+            <button onClick={() => toggleRoutes()}>Toggle Routes</button>
+            {nodesAlongRoute.map((object) => (
+              <label key={object.id}>Lat: {object.lat}, Lng: {object.lng}</label>
+            )}
+          </div>
+          {generatedRoutes.length > 0 && (
+            <div className="display-generated-routes">
+              {generatedRoutes.map((route, index) => {
+                return (
+                  <div key={index} className="route-details">
+                    <button className="select-route-button" onClick={() => selectRoute(index)}>{`Route ${index + 1}`}</button>
+                  </div>
+                );
+              })}
             </div>
+          )}
         </div>
       ) : null}
     </div>

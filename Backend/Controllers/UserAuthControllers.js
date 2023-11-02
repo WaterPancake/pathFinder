@@ -11,11 +11,11 @@ const checkIsEmailInUse = async(email, checkAndRetrieve = false) =>{
             return (false);
         }
         else{
-            return checkAndRetrieve ? {isInUse:true, Document:querySnapshot} : true
+            return (checkAndRetrieve ? {isInUse:true, Document:querySnapshot} : true);
         }
         
    } catch (error) {
-    throw(error)
+    throw(error);
     
    }
 }
@@ -47,7 +47,8 @@ const userLogin = async (req, res) =>{
 
 }
 
-const userSignup = async(req, res) =>{
+const userSignup = async(req, res) =>{ 
+    console.log("called")
     const userRef = db.collection('User_Accounts')
 
     const {firstName,lastName, email, password } = req.body;

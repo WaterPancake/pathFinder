@@ -1,10 +1,16 @@
 const express = require('express')
 const { db } = require('./firebase')
 const app = express()
+const cors = require('cors')
+
+
 
 const userRoutes = require('./Routes/UserAuthRoutes')
 
 app.use(express.json())
+app.use(cors({
+    origin: '*'
+}));
 
 app.listen(8000,()=>{
     console.log("Begining to listen on port: 8000") 
@@ -28,3 +34,8 @@ app.post('/test-ml-call', async(req,res)=>{
     console.log(req.body)
     
 })
+
+
+app.use('*', (req, res) => {
+    res.status(404).json({error:"Resource not found"});
+  });

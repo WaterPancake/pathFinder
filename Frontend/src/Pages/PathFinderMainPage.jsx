@@ -141,11 +141,12 @@ const newCalculateRoute = () =>{
 const newClearRoute = () =>{
   originRef.current.value = '';
   destinationRef.current.value = '';
-  setDistance(null)
-  setDuration(null)
-  directionRenderer.setMap(null)
-  setDirectionsArray([])
-  setNodesAlongRoute([])
+  setDistance(null);
+  setDuration(null);
+  directionRenderer.setMap(null);
+  setDirectionsArray([]);
+  setNodesAlongRoute([]);
+  setGeneratedRoutes([]);
 
 };
 
@@ -210,11 +211,11 @@ const fetchNodesAlongRoute = (directionRouteResult) =>{
         );
   
         // Place a marker at the markerPosition
-        new window.google.maps.Marker({
-          position: markerPosition,
-          map: map,
-          title: 'Marker',
-        });
+        // new window.google.maps.Marker({
+        //   position: markerPosition,
+        //   map: map,
+        //   title: 'Marker',
+        // });
         
         // const geoPoint = {lng:markerPosition.lng(), lat:markerPosition.lat()}
         // setTestWaypoints(prev => prev.concat(geoPoint))

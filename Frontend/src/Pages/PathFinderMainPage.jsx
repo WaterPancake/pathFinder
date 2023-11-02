@@ -3,6 +3,8 @@ import {useJsApiLoader,Autocomplete } from '@react-google-maps/api';
 import { Link } from 'react-router-dom';
 
 import '../Styles/PathFinderMainPage.css';
+import UserPreference from '../Components/UserPreference';
+
 import '../Styles/UserPreference.css';
 
 const PathFinderMainPage = () => {
@@ -318,6 +320,7 @@ const selectRoute = (routeIndex)=>{
                   <label key={object.id}>Lat: {object.lat}, Lng: {object.lng}</label>
                 ))}
                 {/* <button onClick={createAlbanyRoute}>Creare Albany Route</button> */}
+                <UserPreference/>
             </div>
             {generatedRoutes.length>0 && <div className="display-generated-routes">
               {generatedRoutes.map((route,index) =>{

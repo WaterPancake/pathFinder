@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { GoogleMap, useJsApiLoader, Marker, DirectionsRenderer, Autocomplete } from '@react-google-maps/api';
+import { useJsApiLoader, Autocomplete } from '@react-google-maps/api';
 import { Link } from 'react-router-dom';
 
 import '../Styles/PathFinderMainPage.css';
@@ -251,7 +251,7 @@ const PathFinderMainPage = () => {
             <button onClick={() => toggleRoutes()}>Toggle Routes</button>
             {nodesAlongRoute.map((object) => (
               <label key={object.id}>Lat: {object.lat}, Lng: {object.lng}</label>
-            )}
+            ))}
           </div>
           {generatedRoutes.length > 0 && (
             <div className="display-generated-routes">

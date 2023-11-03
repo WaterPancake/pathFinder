@@ -52,5 +52,12 @@
 }
 
 .user-login-screen div.main-display{
-    background-color: #0660ed;
+    background-size: 80%;
+    padding: 0;
+    background-repeat: no-repeat;
+    /* background-image: url('https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNmtucWRzb3l0ODFpaG9naHNicjNscDBxcmo2cHpuMnR0amdvNnc0aCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/cQbGMCkT1PZszSNw5F/giphy-downsized-large.gif'); */
+}
+.user-login-screen div.main-display img{
+    height:100%;
+    width: 100%;
 }

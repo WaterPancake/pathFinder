@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-// import {useLogin} from '../hook/useLogin'
+import {useLogin} from '../Hooks/useLogin'
 
 import '../Styles/LoginPage.css'
 const LoginPage = () => {
@@ -8,13 +8,13 @@ const LoginPage = () => {
     const [password, setPassword] = useState('')
     const [emptyFields, setEmptyFields] = useState([])
 
-    // const {error, isLoading, login} = useLogin()
+    const {error, isLoading, login, setError} = useLogin()
 
-    const handleSubmit = (e) =>{
-        e.preventDefault()
+    const handleSubmit = (e) =>{ 
+        e.preventDefault() 
         setEmptyFields([])
-
-        // login(email, password)
+        setError(null)
+        login(email, password)
     }
     return (  
         <div className='user-login-screen'>
@@ -33,15 +33,14 @@ const LoginPage = () => {
 
                     <h3>Forgot your password? Click <a href="/">Here</a></h3> <br />
 
-                    {/* {error && <div className="error">{error}</div> } */}
+                    {error && <div className="error">{error}</div> }
  
-                    <button >Login</button>
-                    {/* <button disabled = {isLoading} >Login</button> */}
+                    <button disabled={isLoading}>Login</button>
                     
                 </form>
             </div>
             <div className="main-display">
-                GFDBFBD
+                <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNmtucWRzb3l0ODFpaG9naHNicjNscDBxcmo2cHpuMnR0amdvNnc0aCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/cQbGMCkT1PZszSNw5F/giphy-downsized-large.gif" alt="" />
             </div>
         </div>     
     );

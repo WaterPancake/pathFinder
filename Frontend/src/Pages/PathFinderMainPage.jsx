@@ -41,7 +41,7 @@ const PathFinderMainPage = () => {
 
   const [directionsArray, setDirectionsArray] = useState([]);
   const [nodesAlongRoute, setNodesAlongRoute] = useState([]);
-  const [pickRoute, setPickRoute] = useState(0);
+  // const [pickRoute, setPickRoute] = useState(0);
 
   /**Holds the lng lat object array for each route */
   const [calculatedRouteWaypoints, setCalculatedRouteWaypoints] = useState([]);
@@ -98,10 +98,6 @@ useEffect(()=>{
 
     setDirectionService(new window.google.maps.DirectionsService());
     setDirectionRenderer(new window.google.maps.DirectionsRenderer());
-  
-     
-    
-
   }
   
 },[isLoaded,showMap,location])
@@ -179,13 +175,15 @@ const addWaypoint = () =>{
 
   }) 
 }
-const toggleRoutes = ()=>{
- if(directionsArray.length>1){ 
-    directionRenderer.setDirections(directionsArray[pickRoute]);
-    // console.log(pickRoute,directionsArray.length)
-    setPickRoute((index)=> ((index +1)%directionsArray.length));
-  }
-}
+
+// const toggleRoutes = ()=>{
+//  if(directionsArray.length>1){ 
+//     directionRenderer.setDirections(directionsArray[pickRoute]);
+//     // console.log(pickRoute,directionsArray.length)
+//     setPickRoute((index)=> ((index +1)%directionsArray.length));
+//   }
+// }
+
 const fetchNodesAlongRoute = (directionRouteResult) =>{
 
     // Calculate the marker interval (every 5th of the route)
@@ -304,21 +302,25 @@ const selectRoute = (routeIndex)=>{
                     <input ref={destinationRef} type="text" name="" id="" placeholder="Choose a destination..."  />
                 </Autocomplete>
             </div>): null}
-            <div className="customize-trip"></div>
-                <label htmlFor="">Duration: {duration} </label>
-                <label htmlFor="">Distance: {distance} </label>
-                <button onClick={() => map.panTo(center)}>reset</button>
-                <button onClick={() => console.log(originRef.current.value, destinationRef.current.value)}>console</button>
+            {/* <div className="customize-trip"></div> */}
+                <div className='timing'> 
+                <label className="distination" htmlFor="">Duration: {duration} </label>
+                <label className="distination" htmlFor="">Distance: {distance} </label>
+                </div>
+                <div className='routes'>
+                <button className="routebuttons" Click={() => map.panTo(center)}>Reset</button>
+                {/* <button onClick={() => console.log(originRef.current.value, destinationRef.current.value)}>console</button> */}
                 {/* <button onClick={getLocation}>location</button> */}
-                <button onClick={()=>newCalculateRoute()}>Calculate Route</button>
-                <button onClick={()=> newClearRoute()}>Clear Route</button>
-                <button onClick={()=> addWaypoint()}>Add Waypoint Route</button>
-                <button onClick={()=> generateRoutesForUser()}>Find Routes</button>
-                <button onClick={()=>toggleRoutes()}>toggle routes</button>
+                <button className="routebuttons" onClick={()=>newCalculateRoute()}>Calculate Route</button>
+                <button className="routebuttons" onClick={()=> newClearRoute()}>Clear Route</button>
+                <button className="routebuttons" onClick={()=> addWaypoint()}>Add Waypoint Route</button>
+                <button className="routebuttons" onClick={()=> generateRoutesForUser()}>Find Routes</button>
+                {/* <button onClick={()=>toggleRoutes()}>toggle routes</button> */}
                                 {nodesAlongRoute.map((object) => (
                   <label key={object.id}>Lat: {object.lat}, Lng: {object.lng}</label>
                 ))}
                 {/* <button onClick={createAlbanyRoute}>Creare Albany Route</button> */}
+                </div>
                 <UserPreference/>
             </div>
             {generatedRoutes.length>0 && <div className="display-generated-routes">

@@ -75,7 +75,6 @@ const SignupPage = () => {
     return ( 
         <div className='user-signup-screen'>
             <div className="side-display">
-            GFDBFBD
             </div>
             <div className="main-display">
 

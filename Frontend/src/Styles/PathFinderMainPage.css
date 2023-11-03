@@ -26,24 +26,24 @@ body{
     border: 1px solid black;
     padding: 20px;
     box-sizing: content-box;
-    background-image: url('https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNmtucWRzb3l0ODFpaG9naHNicjNscDBxcmo2cHpuMnR0amdvNnc0aCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/cQbGMCkT1PZszSNw5F/giphy-downsized-large.gif');
+    background-image: url('https://images.freeimages.com/images/large-previews/08f/open-road-1540190.jpg');
 }
 .destination-calculator-header-buttons{
     display: grid;
     grid-template-columns: 2fr 1fr;
     gap: 10px;
 }
-.destination-calculator-header-buttons label, .customize-trip-button{
+.destination-calculator-header-buttons label{
     padding: 15px 20px;
-    background-color: grey;
+    background: linear-gradient(50deg, #5c5858 37%, #000000 80%);
     border-radius: 15px;
     font-size: 20px;
     user-select: none;
-
     /* margin-left: 10px; */
 }
 .destination-calculator-header-buttons label:hover{
     cursor: pointer;
+    background: rgba(239, 2, 2, 0.47);
 }
 .destination-picker{
     display: flex;
@@ -54,10 +54,11 @@ body{
     border-radius: 10px;
     border: 1px solid black;
     font-size: 20px;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     padding: 10px;
     width: 100%;
     box-sizing: border-box;
+    margin-top: 10px;
 }
 .destination-calculator input:focus{
     border-radius: 2px solid rgb(1, 1, 13);
@@ -68,6 +69,49 @@ body{
 .getting-current-location{
     width: 100%;
 }
+
 label{
     color:whitesmoke;
+    font-size: 20px;
+    border-color:5px #000000;
+}
+
+.timing {
+    margin-top: 20px;
+}
+
+.distination {
+    color:rgb(15, 15, 15);
+    font-size: 20px;
+    background-color: rgb(228, 229, 237);
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    border-color:5px #000000;
+    margin-top: 20px;
+}
+
+.routes {
+    display: grid;
+    grid-template-columns: auto auto auto auto auto;
+    margin-top: 20px;
+    width: 100%;
+    float: center;
+}
+
+.routebuttons {
+    width: 90%;
+    padding: 10px 10px;
+    cursor: pointer;
+    border-radius: 40%;
+    font-size: 12px;
+    margin-right: 30px;
+    font-weight: bold;
+    color: #ffffff;
+    background: linear-gradient(50deg, #5c5858 37%, #00000090 80%);
+    border: solid #0d0d0d6a 3px;
+    border-radius: 70px;
+}
+
+.routebuttons:hover {
+    cursor: pointer;
+    background: rgba(239, 2, 2, 0.47);
 }

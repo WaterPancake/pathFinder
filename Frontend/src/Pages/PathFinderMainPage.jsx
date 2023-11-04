@@ -312,6 +312,7 @@ const selectRoute = (routeIndex)=>{
                 <button onClick={() => console.log(originRef.current.value, destinationRef.current.value)}>console</button>
                 {/* <button onClick={getLocation}>location</button> */}
                 <button onClick={()=>newCalculateRoute()}>Calculate Route</button>
+                <button>Try Again</button>
                 <button onClick={()=> newClearRoute()}>Clear Route</button>
                 <button onClick={()=> addWaypoint()}>Add Waypoint Route</button>
                 <button onClick={()=> generateRoutesForUser()}>Find Routes</button>
@@ -320,15 +321,16 @@ const selectRoute = (routeIndex)=>{
                   <label key={object.id}>Lat: {object.lat}, Lng: {object.lng}</label>
                 ))}
                 {/* <button onClick={createAlbanyRoute}>Creare Albany Route</button> */}
-                <UserPreference/>
-            </div>
-            {generatedRoutes.length>0 && <div className="display-generated-routes">
+                {generatedRoutes.length>0 && <div className="display-generated-routes">
               {generatedRoutes.map((route,index) =>{
                 return(<div key={index} className="route-details">
                   <button className='select-route-button' onClick={()=>selectRoute(index)}>{`route ${index+1}`}</button>
                 </div>)
               })}
             </div>}
+                <UserPreference/>
+            </div>
+            
         </div>
       ) : null}
     </div>

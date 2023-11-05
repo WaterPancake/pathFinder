@@ -49,6 +49,8 @@ const PathFinderMainPage = () => {
 
   /**Routes generated from the way points calculated fro the ML api */
   const [generatedRoutes, setGeneratedRoutes] = useState([])
+
+  const [selectedLocations, setSelectedLocations] = useState([])
   
 /**Is a reference to the div that will be containting the map */
   const mapDivRef = useRef(null)
@@ -173,7 +175,7 @@ const addWaypoint = () =>{
       setDuration(result.routes[0].legs[0].duration.text);
       setDirectionsArray((array)=>[...array,result])
       setGeneratedRoutes((array)=>[...array,directionsArray[0],result])
-      setCalculatedRouteWaypoints([])
+      // setCalculatedRouteWaypoints([])
       console.log(directionsArray)
 
     };
@@ -230,54 +232,128 @@ const fetchNodesAlongRoute = (directionRouteResult) =>{
         remainingDistance = markerIntervalMeters - segmentDistance + remainingDistance;
       }
     }
-    setNodesAlongRoute((nodeArray)=>nodeArray.slice(0,-1))
+    // setNodesAlongRoute((nodeArray)=>nodeArray.slice(0,-1))
 };
 const generateRoutesForUser = async()=>{
-    setCalculatedRouteWaypoints([])
+  console.log(nodesAlongRoute[0].lat)
+    setCalculatedRouteWaypoints([]);
+    setGeneratedRoutes([]);
+    setDistance(``);
+    setDuration(``);
     //URL to be changbed
-    const results = await fetch('http://localhost:8000/pathFinder/generate-routes',{
-      method: 'POST',
-      headers:{'Content-Type': 'application/json'},
-      body: JSON.stringify(nodesAlongRoute)
-    });
-
+    let results = await fetch('http://localhost:5000/POI',{
+    method:"POST",
+    headers:{'Content-Type': 'application/json'},
+    body:JSON.stringify({
+      cordinates: [
+          {
+              lat: nodesAlongRoute[0].lat,
+              lng: nodesAlongRoute[0].lng
+          },
+          {
+            lat: nodesAlongRoute[1].lat,
+            lng: nodesAlongRoute[1].lng
+          },
+          {
+            lat: nodesAlongRoute[2].lat,
+            lng: nodesAlongRoute[2].lng
+          }
+      ],
+      keywords: ["Cafe","Convenience Store", "Restaurant"]
+  } )
+  })
+    results = await results.json();
+  console.log(results)
     /**This Calculates a route for each set of waypoints from the api */
     //Get the origin coordinates
     const origin = originRef.current.value;
     //get the destination coordinates
     const destination = destinationRef.current.value;
     //results.routeWayPoints is subject to change
-    setCalculatedRouteWaypoints(results.routeWayPoints);
-    //For each array of waypoints
-    results.routeWaypoints.forEach((route)=>{
+    // setCalculatedRouteWaypoints(results.routeWayPoints);
+     //For each array of waypoints
+    
+     setGeneratedRoutes((prev)=>[...prev,directionsArray[0]]);
+     results.forEach((waypoint)=>{
       let stopoverWaypoints = []
       //creates a waypoint object and saves it to an array 
-      route.forEach((waypoint)=>{
           stopoverWaypoints.push({location:waypoint, stopover:true});
-      })
-      //create the DirectionService request object
+          setCalculatedRouteWaypoints((prev)=>[...prev,waypoint] )
+          // They way Wu is setting up the list is causing the python server to crash
+          // console.log({location:waypoint, stopover:true})
+          //create the DirectionService request object
       const request = {
         origin,
         destination,
         travelMode: 'DRIVING',
-        waypoint:stopoverWaypoints,
+        waypoints:stopoverWaypoints,
         optimizeWaypoints: true
       };
       //Uses the directionService.route to generate a route and saves it to generated route
       directionService.route(request, (result,status) =>{
         if(status === 'OK')
-        {
+        {console.log("OK")
           setGeneratedRoutes((prev)=>[...prev,result]);
 
         }
       })
+          
     })
+    
+    
+
+
+
+    // //For each array of waypoints
+    // results.routeWaypoints.forEach((route)=>{
+    //   let stopoverWaypoints = []
+    //   //creates a waypoint object and saves it to an array 
+    //   route.forEach((waypoint)=>{
+    //       stopoverWaypoints.push({location:waypoint, stopover:true});
+    //   })
+    //   //create the DirectionService request object
+    //   const request = {
+    //     origin,
+    //     destination,
+    //     travelMode: 'DRIVING',
+    //     waypoint:stopoverWaypoints,
+    //     optimizeWaypoints: true
+    //   };
+    //   //Uses the directionService.route to generate a route and saves it to generated route
+    //   directionService.route(request, (result,status) =>{
+    //     if(status === 'OK')
+    //     {
+    //       setGeneratedRoutes((prev)=>[...prev,result]);
+
+    //     }
+    //   })
+    // })
 };
 const selectRoute = (routeIndex)=>{
   console.log(calculatedRouteWaypoints);
   directionRenderer.setDirections(generatedRoutes[routeIndex]);
-  setDistance(generatedRoutes[routeIndex].routes[0].legs[0].distance.text);
-  setDuration(generatedRoutes[routeIndex].routes[0].legs[0].duration.text);
+  let totalDistance = 0;
+  let totalDuration = 0;
+
+  generatedRoutes[routeIndex].routes[0].legs.forEach((leg)=>{
+    totalDistance += leg.distance.value
+    totalDuration += leg.duration.value
+  })
+  const totalDistanceInMiles = (totalDistance * 0.000621371).toFixed(2);
+   // Convert the total duration to hours or minutes as needed
+   let formattedDuration;
+   if (totalDuration < 3600) {
+     // If the total duration is less than an hour, show it in minutes
+     const minutes = Math.floor(totalDuration / 60);
+     formattedDuration = `${minutes} minutes`;
+   } else {
+     // Otherwise, show it in hours
+     const hours = Math.floor(totalDuration / 3600);
+     const minutes = Math.floor((totalDuration % 3600) / 60);
+     formattedDuration = `${hours} hours ${minutes} minutes`;
+   }
+  setDistance(`${totalDistanceInMiles}: miles`);
+  setDuration(formattedDuration);
 
 }
 const callML = async() =>{
@@ -304,7 +380,12 @@ const callML = async() =>{
   } )
   })
   .then(result => result.json())
-  .then(data => console.log(data))
+  .then(data => {
+    data.forEach((object)=>{
+      console.log(object)
+    })
+  })
+  
 }
     return (
     <div className="PathFinderMapPage">
@@ -344,18 +425,26 @@ const callML = async() =>{
                 <button onClick={()=> generateRoutesForUser()}>Find Routes</button>
                 <button onClick={()=>callML()}>Call ML</button>
                 <button onClick={()=>toggleRoutes()}>toggle routes</button>
-                                {nodesAlongRoute.map((object) => (
+                                {/* {nodesAlongRoute.map((object) => (
                   <label key={object.id}>Lat: {object.lat}, Lng: {object.lng}</label>
-                ))}
+                ))} */}
                 {/* <button onClick={createAlbanyRoute}>Creare Albany Route</button> */}
                 {generatedRoutes.length>0 && <div className="display-generated-routes">
               {generatedRoutes.map((route,index) =>{
-                return(<div key={index} className="route-details">
+                if(index === 0 ){
+                  return(<div key={index} className="route-details">
+                  <label htmlFor="">Original Route</label>
+                <button className='select-route-button' onClick={()=>selectRoute(index)}>{`route ${index+1}`}</button>
+              </div>)
+                }else{
+                  return(<div key={index} className="route-details">
+                    <label htmlFor="">{calculatedRouteWaypoints[index-1].name}</label>
                   <button className='select-route-button' onClick={()=>selectRoute(index)}>{`route ${index+1}`}</button>
                 </div>)
+                }
               })}
             </div>}
-                <UserPreference/>
+                <UserPreference setSelectedLocations={setSelectedLocations}/>
             </div>
             
         </div>

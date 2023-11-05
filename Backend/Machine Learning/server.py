@@ -11,7 +11,7 @@ import googlemaps
 gmaps = googlemaps.Client(key='AIzaSyBEXWNMZk04AR8ivjwnzrmkax0CVsUX8oQ')
 
 
-app = Flask(__name__)
+app = Flask(__name__) 
 CORS(app)
 
 
@@ -25,11 +25,11 @@ def find_POI():
     params = {
         'query': keywords,
         'location': cordinate,
-        'radius': 1000
+        'radius': 3000
     }
     recomendation = gmaps.places(**params)
     choice = random.randrange(len(recomendation['results']) - 1)
-    poi.append({
+    poi.append({ 
         'name': recomendation['results'][choice]['name'],
         'lat': recomendation['results'][choice]['geometry']['location']['lat'], 
         'lng': recomendation['results'][choice]['geometry']['location']['lng'],

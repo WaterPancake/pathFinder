@@ -69,3 +69,23 @@ body{
 label{
     color:whitesmoke;
 }
+.route-details{
+    display: flex;
+    flex-direction: column;
+    box-sizing: content-box;
+    margin-bottom: 10px;
+    /* border: 1px solid black; */
+}
+.route-details label{
+    font-size: 25px;
+    color: black;
+    margin-bottom: 5px;
+}
+.route-details button{
+    width: 30%;
+    margin-left: auto;
+    margin-right: auto;
+    /* height: 20px; */
+    font-size: 20px;
+    padding: 10px 0px;
+}

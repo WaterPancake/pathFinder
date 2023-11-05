@@ -4,7 +4,7 @@ import ColorButton from '../Components/ColorButton';
 import ItemDiv from '../Components/ItemDiv';
 import PriceBar from '../Components/PriceBar';
 
-const UserPreference = () => {
+const UserPreference = ({setSelectedLocations}) => {
   const [visibleSections, setVisibleSections] = useState({});
   const [selectedItems, setSelectedItems] = useState([]);
   const [priceBarValue, setPriceBarValue] = useState(1);
@@ -23,11 +23,14 @@ const UserPreference = () => {
 
       // setSelectedItems([...selectedItems, label]);
       setSelectedItems(selectedItems.filter((item) => item !== label));
+      setSelectedLocations(selectedItems);
+
 
     } else {
 
       // setSelectedItems(selectedItems.filter((item) => item !== label));
       setSelectedItems([...selectedItems, label]);
+      setSelectedLocations(selectedItems);
     }
     console.log(selectedItems)
   };

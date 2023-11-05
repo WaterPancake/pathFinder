@@ -280,6 +280,32 @@ const selectRoute = (routeIndex)=>{
   setDuration(generatedRoutes[routeIndex].routes[0].legs[0].duration.text);
 
 }
+const callML = async() =>{
+
+  fetch('http://localhost:5000/POI',{
+    method:"POST",
+    headers:{'Content-Type': 'application/json'},
+    body:JSON.stringify({
+      cordinates: [
+          {
+              lat: 40.728728,
+              lng: -73.982614
+          },
+          {
+              lat: 40.767867,
+              lng: -73.964271
+          },
+          {
+              lat: 40.710601,
+              lng: -73.960901
+          }
+      ],
+      keywords: ["Cafe"]
+  } )
+  })
+  .then(result => result.json())
+  .then(data => console.log(data))
+}
     return (
     <div className="PathFinderMapPage">
       {isGettingCurrentLocation ? <div className="getting-current-location">Getting Current Location...</div> : null}
@@ -316,6 +342,7 @@ const selectRoute = (routeIndex)=>{
                 <button onClick={()=> newClearRoute()}>Clear Route</button>
                 <button onClick={()=> addWaypoint()}>Add Waypoint Route</button>
                 <button onClick={()=> generateRoutesForUser()}>Find Routes</button>
+                <button onClick={()=>callML()}>Call ML</button>
                 <button onClick={()=>toggleRoutes()}>toggle routes</button>
                                 {nodesAlongRoute.map((object) => (
                   <label key={object.id}>Lat: {object.lat}, Lng: {object.lng}</label>

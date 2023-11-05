@@ -8,7 +8,7 @@ from flask_cors import CORS
 
 #stuff for Google maps
 import googlemaps
-gmaps = googlemaps.Client(key='API_KEY_HERE')
+gmaps = googlemaps.Client(key='AIzaSyBEXWNMZk04AR8ivjwnzrmkax0CVsUX8oQ')
 
 
 app = Flask(__name__)

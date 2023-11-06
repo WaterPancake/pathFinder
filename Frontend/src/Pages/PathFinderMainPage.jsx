@@ -16,7 +16,7 @@ const PathFinderMainPage = () => {
 /**Boolean for deciding if you want the map to Render
  * TO BE REMOVED IN FINAL PRODUCT
  */
-  const [showMap, setShowMap] = useState(false);
+  const [showMap, setShowMap] = useState(true);
 /**Booleand for deciding if you want to show the origin and destination picker */
   const [showDestinationPicker, setShoeDestinationPicker] = useState(false);
   /**Holds the geolocation(latitiude and longiutude), for the user current location, if it can be found */
@@ -52,6 +52,7 @@ const PathFinderMainPage = () => {
 
   const [selectedLocations, setSelectedLocations] = useState([])
   
+  const [isLoading, setIsLoading] = useState(false);
 /**Is a reference to the div that will be containting the map */
   const mapDivRef = useRef(null)
   /** @type React.MutableRefObject<HTMLInputElement> */
@@ -318,6 +319,7 @@ const fetchNodesAlongRoute = (directionRouteResult) =>{
 };
 
 const generateRoutesForUser = async()=>{
+  setIsLoading(true);
   console.log("selectedLocations.length: ",selectedLocations.length)
 
   if(selectedLocations.length === 0){
@@ -382,7 +384,7 @@ const generateRoutesForUser = async()=>{
     })
     
   }
-  
+  setIsLoading(false);
 };
 const selectRoute = (routeIndex)=>{
   console.log(calculatedRouteWaypoints);
@@ -484,6 +486,7 @@ const callML = async() =>{
                   <label key={object.id}>Lat: {object.lat}, Lng: {object.lng}</label>
                 ))} */}
                 {/* <button onClick={createAlbanyRoute}>Creare Albany Route</button> */}
+                {isLoading && <label htmlFor="">Generating Routes...</label> }
                 {generatedRoutes.length>0 && <div className="display-generated-routes">
                   {generatedRoutes.map((route,index) =>{
                     if(index === 0 ){

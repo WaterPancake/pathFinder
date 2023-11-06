@@ -18,6 +18,7 @@ CORS(app)
 @app.route('/POI', methods=["POST"])
 def find_POI():
   keywords = request.json["keywords"]
+  # keywords = ["Cafe","Convenience Store", "Restaurant"]
   # will hold all the recomendations
   poi = []
   

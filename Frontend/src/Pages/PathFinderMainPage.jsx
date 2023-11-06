@@ -234,7 +234,12 @@ const fetchNodesAlongRoute = (directionRouteResult) =>{
     }
     // setNodesAlongRoute((nodeArray)=>nodeArray.slice(0,-1))
 };
+useEffect(()=>{
+  console.log(selectedLocations);
+
+},[selectedLocations])
 const generateRoutesForUser = async()=>{
+  console.log("selectedLocations: ", selectedLocations);
   console.log(nodesAlongRoute[0].lat)
     setCalculatedRouteWaypoints([]);
     setGeneratedRoutes([]);
@@ -259,7 +264,7 @@ const generateRoutesForUser = async()=>{
             lng: nodesAlongRoute[2].lng
           }
       ],
-      keywords: ["Cafe","Convenience Store", "Restaurant"]
+      keywords: selectedLocations
   } )
   })
     results = await results.json();

@@ -4,7 +4,7 @@ import ColorButton from '../Components/ColorButton';
 import ItemDiv from '../Components/ItemDiv';
 import PriceBar from '../Components/PriceBar';
 
-const UserPreference = () => {
+const UserPreference = ({setSelectedLocations}) => {
   const [visibleSections, setVisibleSections] = useState({});
   const [selectedItems, setSelectedItems] = useState([]);
   const [priceBarValue, setPriceBarValue] = useState(1);
@@ -20,16 +20,18 @@ const UserPreference = () => {
 
   const handleItemClick = (label) => {
     if (selectedItems.includes(label)) {
-
       // setSelectedItems([...selectedItems, label]);
-      setSelectedItems(selectedItems.filter((item) => item !== label));
+      const updatedItems = selectedItems.filter((item) => item !== label);
+      setSelectedItems(updatedItems);
+      setSelectedLocations(updatedItems);
+
 
     } else {
-
+    
       // setSelectedItems(selectedItems.filter((item) => item !== label));
       setSelectedItems([...selectedItems, label]);
+      setSelectedLocations(selectedItems);
     }
-    console.log(selectedItems)
   };
 
   const handlePriceChange = (newValue) => {
@@ -57,6 +59,7 @@ const UserPreference = () => {
 
   return (
     <div className="UserPreference">
+      {selectedItems}
       <div className="filter">
       <ColorButton
         id="1"
@@ -97,12 +100,12 @@ const UserPreference = () => {
       {visibleSections['Food'] && (
         <div className='container'>
           <div className="type">Dietary</div>
-            <ItemDiv label="Cafe" onClick={() => handleItemClick("Cafe")} isSelected={selectedItems.includes("Cafe")} />
-            <ItemDiv label="Bakery" onClick={() => handleItemClick("Bakery")} isSelected={selectedItems.includes("Bakery")} />
-            <ItemDiv label="Convenience Store" onClick={() => handleItemClick("Convenience Store")} isSelected={selectedItems.includes("Convenience Store")} />
-            <ItemDiv label= "Supermarket" onClick={() => handleItemClick("Supermarket")} isSelected={selectedItems.includes("Supermarket")} />
-            <ItemDiv label= "Restaurant" onClick={() => handleItemClick("Restaurant")} isSelected={selectedItems.includes("Restaurant")} />
-            <ItemDiv label= "Take-out" onClick={() => handleItemClick("Take-out")} isSelected={selectedItems.includes("Take-out")} />
+          <ItemDiv label="Cafe" buttonClick={() => handleItemClick("Cafe")} isSelected={selectedItems.includes("Cafe")} />
+            <ItemDiv label="Bakery" buttonClick={() => handleItemClick("Bakery")} isSelected={selectedItems.includes("Bakery")} />
+            <ItemDiv label="Convenience Store" buttonClick={() => handleItemClick("Convenience Store")} isSelected={selectedItems.includes("Convenience Store")} />
+            <ItemDiv label= "Supermarket" buttonClick={() => handleItemClick("Supermarket")} isSelected={selectedItems.includes("Supermarket")} />
+            <ItemDiv label= "Restaurant" buttonClick={() => handleItemClick("Restaurant")} isSelected={selectedItems.includes("Restaurant")} />
+            <ItemDiv label= "Take-out" buttonClick={() => handleItemClick("Take-out")} isSelected={selectedItems.includes("Take-out")} />
           </div>
       )}
 

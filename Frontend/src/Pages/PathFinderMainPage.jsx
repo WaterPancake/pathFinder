@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {useJsApiLoader,Autocomplete } from '@react-google-maps/api';
 import { Link } from 'react-router-dom';
-import UserPreference from '../Components/UserPreference';
 
 import '../Styles/PathFinderMainPage.css';
+import UserPreference from '../Components/UserPreference';
+
 import '../Styles/UserPreference.css';
 
 const PathFinderMainPage = () => {
@@ -41,13 +42,15 @@ const PathFinderMainPage = () => {
 
   const [directionsArray, setDirectionsArray] = useState([]);
   const [nodesAlongRoute, setNodesAlongRoute] = useState([]);
-  // const [pickRoute, setPickRoute] = useState(0);
+  const [pickRoute, setPickRoute] = useState(0);
 
   /**Holds the lng lat object array for each route */
   const [calculatedRouteWaypoints, setCalculatedRouteWaypoints] = useState([]);
 
   /**Routes generated from the way points calculated fro the ML api */
   const [generatedRoutes, setGeneratedRoutes] = useState([])
+
+  const [selectedLocations, setSelectedLocations] = useState([])
   
 /**Is a reference to the div that will be containting the map */
   const mapDivRef = useRef(null)
@@ -91,13 +94,97 @@ useEffect(()=>{
   {
     const mapOptions = {
         zoom:14,
-        center:location ||{ lat: 40.748817, lng: -73.9857 }
+        center:location ||{ lat: 40.748817, lng: -73.9857 },
+        styles: [
+          { elementType: "geometry", stylers: [{ color: "#242f3e" }] },
+          { elementType: "labels.text.stroke", stylers: [{ color: "#242f3e" }] },
+          { elementType: "labels.text.fill", stylers: [{ color: "#746855" }] },
+          {
+            featureType: "administrative.locality",
+            elementType: "labels.text.fill",
+            stylers: [{ color: "#d59563" }],
+          },
+          {
+            featureType: "poi",
+            elementType: "labels.text.fill",
+            stylers: [{ color: "#d59563" }],
+          },
+          {
+            featureType: "poi.park",
+            elementType: "geometry",
+            stylers: [{ color: "#263c3f" }],
+          },
+          {
+            featureType: "poi.park",
+            elementType: "labels.text.fill",
+            stylers: [{ color: "#6b9a76" }],
+          },
+          {
+            featureType: "road",
+            elementType: "geometry",
+            stylers: [{ color: "#38414e" }],
+          },
+          {
+            featureType: "road",
+            elementType: "geometry.stroke",
+            stylers: [{ color: "#212a37" }],
+          },
+          {
+            featureType: "road",
+            elementType: "labels.text.fill",
+            stylers: [{ color: "#9ca5b3" }],
+          },
+          {
+            featureType: "road.highway",
+            elementType: "geometry",
+            stylers: [{ color: "#746855" }],
+          },
+          {
+            featureType: "road.highway",
+            elementType: "geometry.stroke",
+            stylers: [{ color: "#1f2835" }],
+          },
+          {
+            featureType: "road.highway",
+            elementType: "labels.text.fill",
+            stylers: [{ color: "#f3d19c" }],
+          },
+          {
+            featureType: "transit",
+            elementType: "geometry",
+            stylers: [{ color: "#2f3948" }],
+          },
+          {
+            featureType: "transit.station",
+            elementType: "labels.text.fill",
+            stylers: [{ color: "#d59563" }],
+          },
+          {
+            featureType: "water",
+            elementType: "geometry",
+            stylers: [{ color: "#17263c" }],
+          },
+          {
+            featureType: "water",
+            elementType: "labels.text.fill",
+            stylers: [{ color: "#515c6d" }],
+          },
+          {
+            featureType: "water",
+            elementType: "labels.text.stroke",
+            stylers: [{ color: "#17263c" }],
+          },
+        ]
     }
     const newMap = new window.google.maps.Map(mapDivRef.current, mapOptions)
     setMap(newMap)
 
     setDirectionService(new window.google.maps.DirectionsService());
     setDirectionRenderer(new window.google.maps.DirectionsRenderer());
+  
+     
+    
+
   }
   
 },[isLoaded,showMap,location])
@@ -168,22 +255,20 @@ const addWaypoint = () =>{
       setDuration(result.routes[0].legs[0].duration.text);
       setDirectionsArray((array)=>[...array,result])
       setGeneratedRoutes((array)=>[...array,directionsArray[0],result])
-      setCalculatedRouteWaypoints([])
+      // setCalculatedRouteWaypoints([])
       console.log(directionsArray)
 
     };
 
   }) 
 }
-
-// const toggleRoutes = ()=>{
-//  if(directionsArray.length>1){ 
-//     directionRenderer.setDirections(directionsArray[pickRoute]);
-//     // console.log(pickRoute,directionsArray.length)
-//     setPickRoute((index)=> ((index +1)%directionsArray.length));
-//   }
-// }
-
+const toggleRoutes = ()=>{
+ if(directionsArray.length>1){ 
+    directionRenderer.setDirections(directionsArray[pickRoute]);
+    // console.log(pickRoute,directionsArray.length)
+    setPickRoute((index)=> ((index +1)%directionsArray.length));
+  }
+}
 const fetchNodesAlongRoute = (directionRouteResult) =>{
 
     // Calculate the marker interval (every 5th of the route)
@@ -227,55 +312,165 @@ const fetchNodesAlongRoute = (directionRouteResult) =>{
         remainingDistance = markerIntervalMeters - segmentDistance + remainingDistance;
       }
     }
-    setNodesAlongRoute((nodeArray)=>nodeArray.slice(0,-1))
+    // setNodesAlongRoute((nodeArray)=>nodeArray.slice(0,-1))
 };
-const generateRoutesForUser = async()=>{
-    setCalculatedRouteWaypoints([])
-    //URL to be changbed
-    const results = await fetch('http://localhost:8000/pathFinder/generate-routes',{
-      method: 'POST',
-      headers:{'Content-Type': 'application/json'},
-      body: JSON.stringify(nodesAlongRoute)
-    });
+useEffect(()=>{
+  console.log(selectedLocations);
 
+},[selectedLocations])
+const generateRoutesForUser = async()=>{
+  console.log("selectedLocations: ", selectedLocations);
+  console.log(nodesAlongRoute[0].lat)
+    setCalculatedRouteWaypoints([]);
+    setGeneratedRoutes([]);
+    setDistance(``);
+    setDuration(``);
+    //URL to be changbed
+    let results = await fetch('http://localhost:5000/POI',{
+    method:"POST",
+    headers:{'Content-Type': 'application/json'},
+    body:JSON.stringify({
+      cordinates: [
+          {
+              lat: nodesAlongRoute[0].lat,
+              lng: nodesAlongRoute[0].lng
+          },
+          {
+            lat: nodesAlongRoute[1].lat,
+            lng: nodesAlongRoute[1].lng
+          },
+          {
+            lat: nodesAlongRoute[2].lat,
+            lng: nodesAlongRoute[2].lng
+          }
+      ],
+      keywords: selectedLocations
+  } )
+  })
+    results = await results.json();
+  console.log(results)
     /**This Calculates a route for each set of waypoints from the api */
     //Get the origin coordinates
     const origin = originRef.current.value;
     //get the destination coordinates
     const destination = destinationRef.current.value;
     //results.routeWayPoints is subject to change
-    setCalculatedRouteWaypoints(results.routeWayPoints);
-    //For each array of waypoints
-    results.routeWaypoints.forEach((route)=>{
+    // setCalculatedRouteWaypoints(results.routeWayPoints);
+     //For each array of waypoints
+    
+     setGeneratedRoutes((prev)=>[...prev,directionsArray[0]]);
+     results.forEach((waypoint)=>{
       let stopoverWaypoints = []
       //creates a waypoint object and saves it to an array 
-      route.forEach((waypoint)=>{
           stopoverWaypoints.push({location:waypoint, stopover:true});
-      })
-      //create the DirectionService request object
+          setCalculatedRouteWaypoints((prev)=>[...prev,waypoint] )
+          // They way Wu is setting up the list is causing the python server to crash
+          // console.log({location:waypoint, stopover:true})
+          //create the DirectionService request object
       const request = {
         origin,
         destination,
         travelMode: 'DRIVING',
-        waypoint:stopoverWaypoints,
+        waypoints:stopoverWaypoints,
         optimizeWaypoints: true
       };
       //Uses the directionService.route to generate a route and saves it to generated route
       directionService.route(request, (result,status) =>{
         if(status === 'OK')
-        {
+        {console.log("OK")
           setGeneratedRoutes((prev)=>[...prev,result]);
 
         }
       })
+          
     })
+    
+    
+
+
+
+    // //For each array of waypoints
+    // results.routeWaypoints.forEach((route)=>{
+    //   let stopoverWaypoints = []
+    //   //creates a waypoint object and saves it to an array 
+    //   route.forEach((waypoint)=>{
+    //       stopoverWaypoints.push({location:waypoint, stopover:true});
+    //   })
+    //   //create the DirectionService request object
+    //   const request = {
+    //     origin,
+    //     destination,
+    //     travelMode: 'DRIVING',
+    //     waypoint:stopoverWaypoints,
+    //     optimizeWaypoints: true
+    //   };
+    //   //Uses the directionService.route to generate a route and saves it to generated route
+    //   directionService.route(request, (result,status) =>{
+    //     if(status === 'OK')
+    //     {
+    //       setGeneratedRoutes((prev)=>[...prev,result]);
+
+    //     }
+    //   })
+    // })
 };
 const selectRoute = (routeIndex)=>{
   console.log(calculatedRouteWaypoints);
   directionRenderer.setDirections(generatedRoutes[routeIndex]);
-  setDistance(generatedRoutes[routeIndex].routes[0].legs[0].distance.text);
-  setDuration(generatedRoutes[routeIndex].routes[0].legs[0].duration.text);
+  let totalDistance = 0;
+  let totalDuration = 0;
 
+  generatedRoutes[routeIndex].routes[0].legs.forEach((leg)=>{
+    totalDistance += leg.distance.value
+    totalDuration += leg.duration.value
+  })
+  const totalDistanceInMiles = (totalDistance * 0.000621371).toFixed(2);
+   // Convert the total duration to hours or minutes as needed
+   let formattedDuration;
+   if (totalDuration < 3600) {
+     // If the total duration is less than an hour, show it in minutes
+     const minutes = Math.floor(totalDuration / 60);
+     formattedDuration = `${minutes} minutes`;
+   } else {
+     // Otherwise, show it in hours
+     const hours = Math.floor(totalDuration / 3600);
+     const minutes = Math.floor((totalDuration % 3600) / 60);
+     formattedDuration = `${hours} hours ${minutes} minutes`;
+   }
+  setDistance(`${totalDistanceInMiles}: miles`);
+  setDuration(formattedDuration);
+
+}
+const callML = async() =>{
+
+  fetch('http://localhost:5000/POI',{
+    method:"POST",
+    headers:{'Content-Type': 'application/json'},
+    body:JSON.stringify({
+      cordinates: [
+          {
+              lat: 40.728728,
+              lng: -73.982614
+          },
+          {
+              lat: 40.767867,
+              lng: -73.964271
+          },
+          {
+              lat: 40.710601,
+              lng: -73.960901
+          }
+      ],
+      keywords: ["Cafe"]
+  } )
+  })
+  .then(result => result.json())
+  .then(data => {
+    data.forEach((object)=>{
+      console.log(object)
+    })
+  })
+  
 }
     return (
     <div className="PathFinderMapPage">
@@ -302,34 +497,45 @@ const selectRoute = (routeIndex)=>{
                     <input ref={destinationRef} type="text" name="" id="" placeholder="Choose a destination..."  />
                 </Autocomplete>
             </div>): null}
-            {/* <div className="customize-trip"></div> */}
-                <div className='timing'> 
+             {/* <div className="customize-trip"></div> */}
+             <div className='timing'> 
                 <label className="distination" htmlFor="">Duration: {duration} </label>
                 <label className="distination" htmlFor="">Distance: {distance} </label>
                 </div>
                 <div className='routes'>
-                <button className="routebuttons" Click={() => map.panTo(center)}>Reset</button>
-                {/* <button onClick={() => console.log(originRef.current.value, destinationRef.current.value)}>console</button> */}
+                <button className="routebuttons" onClick={() => map.panTo(center)}>reset</button>
+                <button className="routebuttons"  onClick={() => console.log(originRef.current.value, destinationRef.current.value)}>console</button>
                 {/* <button onClick={getLocation}>location</button> */}
                 <button className="routebuttons" onClick={()=>newCalculateRoute()}>Calculate Route</button>
-                <button className="routebuttons" onClick={()=> newClearRoute()}>Clear Route</button>
-                <button className="routebuttons" onClick={()=> addWaypoint()}>Add Waypoint Route</button>
-                <button className="routebuttons" onClick={()=> generateRoutesForUser()}>Find Routes</button>
-                {/* <button onClick={()=>toggleRoutes()}>toggle routes</button> */}
-                                {nodesAlongRoute.map((object) => (
-                  <label key={object.id}>Lat: {object.lat}, Lng: {object.lng}</label>
-                ))}
-                {/* <button onClick={createAlbanyRoute}>Creare Albany Route</button> */}
+                <button className="routebuttons" >Try Again</button>
+                <button className="routebuttons"  onClick={()=> newClearRoute()}>Clear Route</button>
+                <button className="routebuttons"  onClick={()=> addWaypoint()}>Add Waypoint Route</button>
+                <button className="routebuttons"  onClick={()=> generateRoutesForUser()}>Find Routes</button>
+                <button className="routebuttons"  onClick={()=>callML()}>Call ML</button>
+                <button className="routebuttons"  onClick={()=>toggleRoutes()}>toggle routes</button>
                 </div>
-                <UserPreference/>
-            </div>
-            {generatedRoutes.length>0 && <div className="display-generated-routes">
+                                {/* {nodesAlongRoute.map((object) => (
+                  <label key={object.id}>Lat: {object.lat}, Lng: {object.lng}</label>
+                ))} */}
+                {/* <button onClick={createAlbanyRoute}>Creare Albany Route</button> */}
+                {generatedRoutes.length>0 && <div className="display-generated-routes">
               {generatedRoutes.map((route,index) =>{
-                return(<div key={index} className="route-details">
+                if(index === 0 ){
+                  return(<div key={index} className="route-details">
+                  <label htmlFor="">Original Route</label>
+                <button className='select-route-button' onClick={()=>selectRoute(index)}>{`route ${index+1}`}</button>
+              </div>)
+                }else{
+                  return(<div key={index} className="route-details">
+                    <label htmlFor="">{calculatedRouteWaypoints[index-1].name}</label>
                   <button className='select-route-button' onClick={()=>selectRoute(index)}>{`route ${index+1}`}</button>
                 </div>)
+                }
               })}
             </div>}
+                <UserPreference setSelectedLocations={setSelectedLocations}/>
+            </div>
+            
         </div>
       ) : null}
     </div>

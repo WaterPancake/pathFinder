@@ -26,7 +26,7 @@ body{
     border: 1px solid black;
     padding: 20px;
     box-sizing: content-box;
-    background-image: url('https://images.freeimages.com/images/large-previews/08f/open-road-1540190.jpg');
+    background: linear-gradient(135deg, #5c5858 37%, #4746469b 50%);
 }
 .destination-calculator-header-buttons{
     display: grid;
@@ -35,10 +35,11 @@ body{
 }
 .destination-calculator-header-buttons label{
     padding: 15px 20px;
-    background: linear-gradient(50deg, #5c5858 37%, #000000 80%);
+    background: linear-gradient(50deg, #5c5858 37%, #202020 80%);
     border-radius: 15px;
     font-size: 20px;
     user-select: none;
+    border-color: 5px white;
     /* margin-left: 10px; */
 }
 .destination-calculator-header-buttons label:hover{
@@ -83,9 +84,9 @@ label{
 .distination {
     color:rgb(15, 15, 15);
     font-size: 20px;
-    background-color: rgb(228, 229, 237);
+    background-color: rgba(228, 229, 237, 0.503);
     font-family: Georgia, 'Times New Roman', Times, serif;
-    border-color:5px #000000;
+    border-color:5px #00000042;
     margin-top: 20px;
 }
 
@@ -103,12 +104,14 @@ label{
     cursor: pointer;
     border-radius: 40%;
     font-size: 12px;
-    margin-right: 30px;
+    margin-top: 20px;
     font-weight: bold;
     color: #ffffff;
     background: linear-gradient(50deg, #5c5858 37%, #00000090 80%);
-    border: solid #0d0d0d6a 3px;
+    border: solid rgba(231, 219, 219, 0.416) 2px;
     border-radius: 70px;
+    /* row-gap: 5px;
+    column-gap: 5px; */
 }
 
 .routebuttons:hover {

@@ -81,6 +81,8 @@ const SignupPage = () => {
                 <span></span>
                 <label><strong>Create your account</strong></label>
                 <h3>Already have an account? <Link to="/user/login">Log in</Link></h3>
+                <h3> <Link to="/pathfinder">Go back</Link></h3>
+
                 <form onSubmit={handleSignup}>
                 <h3 className='first-name'>first name</h3>
                     <input type="text" onChange={(e) =>{setFirstName(e.target.value)}} 

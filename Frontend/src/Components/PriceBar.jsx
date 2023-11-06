@@ -22,7 +22,7 @@ const PriceBar = ({ onValueChange }) => {
         if (value > maxValue) {
             setValue(maxValue);
         }
-    }, [maxValue, value]);
+    }, [maxValue,value]);
 
     return (
         <div>

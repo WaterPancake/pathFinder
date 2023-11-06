@@ -11,8 +11,8 @@ import googlemaps
 gmaps = googlemaps.Client(key='AIzaSyBEXWNMZk04AR8ivjwnzrmkax0CVsUX8oQ')
 
 
-app = Flask(__name__) 
-CORS(app)
+app = Flask(__name__)
+CORS(app, resources={r"/POI": {"origins": "*"}})
 
 
 @app.route('/POI', methods=["POST"])
@@ -25,7 +25,7 @@ def find_POI():
   for cordinate in request.json["cordinates"]:
     params = {
         'query': keywords,
-        'location': cordinate,
+        'location': cordinate, 
         'radius': 3000
     }
     recomendation = gmaps.places(**params)
@@ -35,7 +35,7 @@ def find_POI():
         'lat': recomendation['results'][choice]['geometry']['location']['lat'], 
         'lng': recomendation['results'][choice]['geometry']['location']['lng'],
         'placeID': recomendation['results'][choice]['place_id']
-    })
+    }) 
 
   return jsonify(poi)
 

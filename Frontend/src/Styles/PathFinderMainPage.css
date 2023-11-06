@@ -40,6 +40,7 @@ body{
     font-size: 20px;
     user-select: none;
     border-color: 5px white;
+    border: 2px solid black;
     /* margin-left: 10px; */
 }
 .destination-calculator-header-buttons label:hover{

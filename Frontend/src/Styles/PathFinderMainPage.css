@@ -6,17 +6,18 @@ body{
 .path-finder{
     height: 90vh;
     display: grid;
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: 1.5fr 1fr;
     border-color: 5px solid black;
-    background: -o-linear-gradient(70deg, #06edfa  60%, rgba(0,0,0,0) 20%), -o-linear-gradient(60deg, #08eb6e 50%, #ef0707 50%);
-    background: -moz-linear-gradient(70deg, #3c0ae3  60%, rgba(0,0,0,0) 50%), -moz-linear-gradient(40deg, #122eae 50%, #6ff403 50%);
-    background: linear-gradient(70deg, #ff109f  70%, rgba(0,0,0,0) 10%), linear-gradient(20deg, #63c0e8 50%, #ff7ee3 50%);
 }
 
 .main-container, .destination-calculator{
     height: auto;
     border-radius: 20px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    /* background-attachment: fixed; */
 }
+
 .main-container{
     background-color: rgba(80, 145, 188, 0.924);
     border-color: 10px solid black;
@@ -25,23 +26,25 @@ body{
     border: 1px solid black;
     padding: 20px;
     box-sizing: content-box;
+    background: linear-gradient(135deg, #5c5858 37%, #4746469b 50%);
 }
 .destination-calculator-header-buttons{
     display: grid;
     grid-template-columns: 2fr 1fr;
     gap: 10px;
 }
-.destination-calculator-header-buttons label, .customize-trip-button{
+.destination-calculator-header-buttons label{
     padding: 15px 20px;
-    background-color: grey;
+    background: linear-gradient(50deg, #413e3e 37%, #605d5d 80%);
     border-radius: 15px;
     font-size: 20px;
     user-select: none;
-
+    border-color: 5px white;
     /* margin-left: 10px; */
 }
 .destination-calculator-header-buttons label:hover{
     cursor: pointer;
+    background: rgba(239, 2, 2, 0.47);
 }
 .destination-picker{
     display: flex;
@@ -52,10 +55,11 @@ body{
     border-radius: 10px;
     border: 1px solid black;
     font-size: 20px;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     padding: 10px;
     width: 100%;
     box-sizing: border-box;
+    margin-top: 10px;
 }
 .destination-calculator input:focus{
     border-radius: 2px solid rgb(1, 1, 13);
@@ -66,26 +70,51 @@ body{
 .getting-current-location{
     width: 100%;
 }
+
 label{
     color:whitesmoke;
-}
-.route-details{
-    display: flex;
-    flex-direction: column;
-    box-sizing: content-box;
-    margin-bottom: 10px;
-    /* border: 1px solid black; */
-}
-.route-details label{
-    font-size: 25px;
-    color: black;
-    margin-bottom: 5px;
-}
-.route-details button{
-    width: 30%;
-    margin-left: auto;
-    margin-right: auto;
-    /* height: 20px; */
     font-size: 20px;
-    padding: 10px 0px;
+    border-color:5px #000000;
+}
+
+.timing {
+    margin-top: 20px;
+}
+
+.distination {
+    color:rgb(15, 15, 15);
+    font-size: 20px;
+    background-color: rgba(228, 229, 237, 0.503);
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    border-color:5px #00000042;
+    margin-top: 20px;
+}
+
+.routes {
+    display: grid;
+    grid-template-columns: auto auto auto auto auto;
+    margin-top: 20px;
+    width: 100%;
+    float: center;
+}
+
+.routebuttons {
+    width: 90%;
+    padding: 10px 10px;
+    cursor: pointer;
+    border-radius: 40%;
+    font-size: 12px;
+    margin-top: 20px;
+    font-weight: bold;
+    color: #ffffff;
+    background: rgba(0, 0, 0, 0.716);
+    border: solid rgba(231, 219, 219, 0.416) 2px;
+    border-radius: 70px;
+    /* row-gap: 5px;
+    column-gap: 5px; */
+}
+
+.routebuttons:hover {
+    cursor: pointer;
+    background: rgba(239, 2, 2, 0.47);
 }

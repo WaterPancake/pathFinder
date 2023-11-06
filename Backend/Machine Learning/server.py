@@ -26,7 +26,7 @@ def find_POI():
     params = {
         'query': keywords,
         'location': cordinate, 
-        'radius': 3000
+        'radius': 1000
     }
     recomendation = gmaps.places(**params)
     choice = random.randrange(len(recomendation['results']) - 1)

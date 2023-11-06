@@ -116,6 +116,8 @@ const newCalculateRoute = () =>{
   directionRenderer.setMap(null)
   setDirectionsArray([])
   setNodesAlongRoute([])
+  setCalculatedRouteWaypoints([]);
+    setGeneratedRoutes([]);
   if(!originRef.current.value || !destinationRef.current.value){
     alert('Both fields must be filled');
   };
@@ -236,7 +238,12 @@ const fetchNodesAlongRoute = (directionRouteResult) =>{
 };
 
 const generateRoutesForUser = async()=>{
-  console.log("selectedLocations: ", selectedLocations);
+  console.log("selectedLocations.length: ",selectedLocations.length)
+
+  if(selectedLocations.length === 0){
+    alert('Please chooose a location');
+  }else{
+    console.log("selectedLocations: ", selectedLocations);
   console.log(nodesAlongRoute);
     setCalculatedRouteWaypoints([]);
     setGeneratedRoutes([]);
@@ -252,7 +259,7 @@ const generateRoutesForUser = async()=>{
             { lat: nodesAlongRoute[1].lat, lng:nodesAlongRoute[1].lng },
             { lat: nodesAlongRoute[2].lat, lng: nodesAlongRoute[2].lng }
         ],
-        keywords: ["Convenience Store", "Restaurant", "Cafe"]
+        keywords: selectedLocations
     }), mode: 'cors'
   })
 
@@ -294,6 +301,7 @@ const generateRoutesForUser = async()=>{
           
     })
     
+  }
   
 };
 const selectRoute = (routeIndex)=>{

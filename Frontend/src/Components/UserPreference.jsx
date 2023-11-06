@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import '../Styles/UserPreference.css';
 import ColorButton from '../Components/ColorButton';
 import ItemDiv from '../Components/ItemDiv';
-import PriceBar from '../Components/PriceBar';
+// import PriceBar from '../Components/PriceBar';
 
 const UserPreference = ({setSelectedLocations}) => {
   const [visibleSections, setVisibleSections] = useState({});
   const [selectedItems, setSelectedItems] = useState([]);
-  const [priceBarValue, setPriceBarValue] = useState(1);
+  // const [priceBarValue, setPriceBarValue] = useState(1);
 
   const toggleVisibility = (section) => {
 
@@ -34,16 +34,16 @@ const UserPreference = ({setSelectedLocations}) => {
     }
   };
 
-  const handlePriceChange = (newValue) => {
-    setPriceBarValue(newValue);
-    console.log(newValue)
-  };
+  // const handlePriceChange = (newValue) => {
+  //   setPriceBarValue(newValue);
+  //   console.log(newValue)
+  // };
 
   const sendDataToBackend = () => {
     console.log(selectedItems)
     const dataToSend = {
       preference: selectedItems,
-      max_price: priceBarValue
+      // max_price: priceBarValue
     };
     
     fetch("/preference", {
@@ -59,7 +59,7 @@ const UserPreference = ({setSelectedLocations}) => {
 
   return (
     <div className="UserPreference">
-      {selectedItems}
+      {/* {selectedItems} */}
       <div className="filter">
       <ColorButton
         id="1"
@@ -105,7 +105,7 @@ const UserPreference = ({setSelectedLocations}) => {
             <ItemDiv label="Convenience Store" buttonClick={() => handleItemClick("Convenience Store")} isSelected={selectedItems.includes("Convenience Store")} />
             <ItemDiv label= "Supermarket" buttonClick={() => handleItemClick("Supermarket")} isSelected={selectedItems.includes("Supermarket")} />
             <ItemDiv label= "Restaurant" buttonClick={() => handleItemClick("Restaurant")} isSelected={selectedItems.includes("Restaurant")} />
-            <ItemDiv label= "Take-out" buttonClick={() => handleItemClick("Take-out")} isSelected={selectedItems.includes("Take-out")} />
+            <ItemDiv label= "Diner" buttonClick={() => handleItemClick("Diner")} isSelected={selectedItems.includes("Diner")} />
           </div>
       )}
 
@@ -127,7 +127,7 @@ const UserPreference = ({setSelectedLocations}) => {
         </div>
       )}
 
-      <PriceBar onValueChange={handlePriceChange} />
+      {/* <PriceBar onValueChange={handlePriceChange} /> */}
       <button className="submit" onClick={sendDataToBackend}>Submit</button>
     </div>
   );

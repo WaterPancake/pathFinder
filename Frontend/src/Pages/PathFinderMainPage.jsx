@@ -94,7 +94,87 @@ useEffect(()=>{
   {
     const mapOptions = {
         zoom:14,
-        center:location ||{ lat: 40.748817, lng: -73.9857 }
+        center:location ||{ lat: 40.748817, lng: -73.9857 },
+        styles: [
+          { elementType: "geometry", stylers: [{ color: "#242f3e" }] },
+          { elementType: "labels.text.stroke", stylers: [{ color: "#242f3e" }] },
+          { elementType: "labels.text.fill", stylers: [{ color: "#746855" }] },
+          {
+            featureType: "administrative.locality",
+            elementType: "labels.text.fill",
+            stylers: [{ color: "#d59563" }],
+          },
+          {
+            featureType: "poi",
+            elementType: "labels.text.fill",
+            stylers: [{ color: "#d59563" }],
+          },
+          {
+            featureType: "poi.park",
+            elementType: "geometry",
+            stylers: [{ color: "#263c3f" }],
+          },
+          {
+            featureType: "poi.park",
+            elementType: "labels.text.fill",
+            stylers: [{ color: "#6b9a76" }],
+          },
+          {
+            featureType: "road",
+            elementType: "geometry",
+            stylers: [{ color: "#38414e" }],
+          },
+          {
+            featureType: "road",
+            elementType: "geometry.stroke",
+            stylers: [{ color: "#212a37" }],
+          },
+          {
+            featureType: "road",
+            elementType: "labels.text.fill",
+            stylers: [{ color: "#9ca5b3" }],
+          },
+          {
+            featureType: "road.highway",
+            elementType: "geometry",
+            stylers: [{ color: "#746855" }],
+          },
+          {
+            featureType: "road.highway",
+            elementType: "geometry.stroke",
+            stylers: [{ color: "#1f2835" }],
+          },
+          {
+            featureType: "road.highway",
+            elementType: "labels.text.fill",
+            stylers: [{ color: "#f3d19c" }],
+          },
+          {
+            featureType: "transit",
+            elementType: "geometry",
+            stylers: [{ color: "#2f3948" }],
+          },
+          {
+            featureType: "transit.station",
+            elementType: "labels.text.fill",
+            stylers: [{ color: "#d59563" }],
+          },
+          {
+            featureType: "water",
+            elementType: "geometry",
+            stylers: [{ color: "#17263c" }],
+          },
+          {
+            featureType: "water",
+            elementType: "labels.text.fill",
+            stylers: [{ color: "#515c6d" }],
+          },
+          {
+            featureType: "water",
+            elementType: "labels.text.stroke",
+            stylers: [{ color: "#17263c" }],
+          },
+        ]
     }
     const newMap = new window.google.maps.Map(mapDivRef.current, mapOptions)
     setMap(newMap)
@@ -391,15 +471,15 @@ const callML = async() =>{
                 <label htmlFor="">Duration: {duration} </label>
                 <label htmlFor="">Distance: {distance} </label>
                 <button onClick={() => map.panTo(center)}>reset</button>
-                <button onClick={() => console.log(originRef.current.value, destinationRef.current.value)}>console</button>
+                {/* <button onClick={() => console.log(originRef.current.value, destinationRef.current.value)}>console</button> */}
                 {/* <button onClick={getLocation}>location</button> */}
                 <button onClick={()=>newCalculateRoute()}>Calculate Route</button>
-                <button>Try Again</button>
+                {/* <button>Try Again</button> */}
                 <button onClick={()=> newClearRoute()}>Clear Route</button>
-                <button onClick={()=> addWaypoint()}>Add Waypoint Route</button>
+                {/* <button onClick={()=> addWaypoint()}>Add Waypoint Route</button> */}
                 <button onClick={()=> generateRoutesForUser()}>Find Routes</button>
-                <button onClick={()=>callML()}>Call ML</button>
-                <button onClick={()=>toggleRoutes()}>toggle routes</button>
+                {/* <button onClick={()=>callML()}>Call ML</button> */}
+                {/* <button onClick={()=>toggleRoutes()}>toggle routes</button> */}
                                 {/* {nodesAlongRoute.map((object) => (
                   <label key={object.id}>Lat: {object.lat}, Lng: {object.lng}</label>
                 ))} */}

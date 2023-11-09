@@ -379,6 +379,9 @@ const generateRoutesForUser = async()=>{
           setGeneratedRoutes((prev)=>[...prev,result]);
 
         }
+        else{
+          alert(status);
+        }
       })
           
     })

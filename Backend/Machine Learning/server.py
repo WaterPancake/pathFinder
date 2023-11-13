@@ -26,7 +26,8 @@ def find_POI():
     params = {
         'query': keywords,
         'location': cordinate, 
-        'radius': 1000
+        'radius': 1000    # to be made adaptive
+        'open_now': True
     }
     recomendation = gmaps.places(**params)
     choice = random.randrange(len(recomendation['results']) - 1)
@@ -34,7 +35,14 @@ def find_POI():
         'name': recomendation['results'][choice]['name'],
         'lat': recomendation['results'][choice]['geometry']['location']['lat'], 
         'lng': recomendation['results'][choice]['geometry']['location']['lng'],
-        'placeID': recomendation['results'][choice]['place_id']
+        'placeID': recomendation['results'][choice]['place_id'],
+        'atributes': recomendation['results'][choice]['types'],
+        'icon': recomendation['results'][choice]['icon'],
+        'photo': recomendation['results'][choice]['photos'],
+        'rating': recomendation['results'][choice]['rating'],
+        'user_rating_total': recomendation['results'][choice]['user_ratings_total'],
+        'address': recomendation['results'][choice]['formatted_address'],
+        'price_level': recomendation['results'][choice]['price_level']
     }) 
 
   return jsonify(poi)

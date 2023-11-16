@@ -8,6 +8,7 @@ const UserPreference = ({setSelectedLocations}) => {
   const [visibleSections, setVisibleSections] = useState({});
   const [selectedItems, setSelectedItems] = useState([]);
   const [priceBarValue, setPriceBarValue] = useState(1);
+  const [customPhrases, setcustomPhrases] = useState("");
 
   const toggleVisibility = (section) => {
 
@@ -27,7 +28,6 @@ const UserPreference = ({setSelectedLocations}) => {
 
 
     } else {
-    
       // setSelectedItems(selectedItems.filter((item) => item !== label));
       setSelectedItems([...selectedItems, label]);
       setSelectedLocations(selectedItems);
@@ -43,7 +43,8 @@ const UserPreference = ({setSelectedLocations}) => {
     console.log(selectedItems)
     const dataToSend = {
       preference: selectedItems,
-      max_price: priceBarValue
+      max_price: priceBarValue,
+      phrases:customPhrases
     };
     
     fetch("/preference", {
@@ -59,7 +60,7 @@ const UserPreference = ({setSelectedLocations}) => {
 
   return (
     <div className="UserPreference">
-      {selectedItems}
+      {/* {selectedItems} */}
       <div className="filter">
       <ColorButton
         id="1"
@@ -100,24 +101,24 @@ const UserPreference = ({setSelectedLocations}) => {
       {visibleSections['Food'] && (
         <div className='container'>
           <div className="type">Dietary</div>
-          <ItemDiv label="Cafe" buttonClick={() => handleItemClick("Cafe")} isSelected={selectedItems.includes("Cafe")} />
+            <ItemDiv label="Cafe" buttonClick={() => handleItemClick("Cafe")} isSelected={selectedItems.includes("Cafe")} />
             <ItemDiv label="Bakery" buttonClick={() => handleItemClick("Bakery")} isSelected={selectedItems.includes("Bakery")} />
             <ItemDiv label="Convenience Store" buttonClick={() => handleItemClick("Convenience Store")} isSelected={selectedItems.includes("Convenience Store")} />
             <ItemDiv label= "Supermarket" buttonClick={() => handleItemClick("Supermarket")} isSelected={selectedItems.includes("Supermarket")} />
             <ItemDiv label= "Restaurant" buttonClick={() => handleItemClick("Restaurant")} isSelected={selectedItems.includes("Restaurant")} />
-            <ItemDiv label= "Take-out" buttonClick={() => handleItemClick("Take-out")} isSelected={selectedItems.includes("Take-out")} />
+            <ItemDiv label= "Diner" buttonClick={() => handleItemClick("Diner")} isSelected={selectedItems.includes("Diner")} />
           </div>
       )}
 
       {visibleSections['Activity'] && (
         <div className="container">
           <div className="type">Activity</div>
-            <ItemDiv label="Spa" onClick={() => handleItemClick("Spa")} isSelected={selectedItems.includes("Spa")} />
-            <ItemDiv label="Zoo" onClick={() => handleItemClick("Zoo")} isSelected={selectedItems.includes("Zoo")} />
-            <ItemDiv label="Park" onClick={() => handleItemClick("Park")} isSelected={selectedItems.includes("Park")} />
-            <ItemDiv label= "Gym" onClick={() => handleItemClick("Gym")} isSelected={selectedItems.includes("Gym")} />
-            <ItemDiv label= "Casino" onClick={() => handleItemClick("Casino")} isSelected={selectedItems.includes("Casino")} />
-            <ItemDiv label= "Aquarium" onClick={() => handleItemClick("Aquarium")} isSelected={selectedItems.includes("Aquarium")} />
+            <ItemDiv label="Spa" buttonClick={() => handleItemClick("Spa")} isSelected={selectedItems.includes("Spa")} />
+            <ItemDiv label="Zoo" buttonClick={() => handleItemClick("Zoo")} isSelected={selectedItems.includes("Zoo")} />
+            <ItemDiv label="Park" buttonClick={() => handleItemClick("Park")} isSelected={selectedItems.includes("Park")} />
+            <ItemDiv label= "Gym" buttonClick={() => handleItemClick("Gym")} isSelected={selectedItems.includes("Gym")} />
+            <ItemDiv label= "Casino" buttonClick={() => handleItemClick("Casino")} isSelected={selectedItems.includes("Casino")} />
+            <ItemDiv label= "Aquarium" buttonClick={() => handleItemClick("Aquarium")} isSelected={selectedItems.includes("Aquarium")} />
         </div>
       )}
 
@@ -128,6 +129,14 @@ const UserPreference = ({setSelectedLocations}) => {
       )}
 
       <PriceBar onValueChange={handlePriceChange} />
+      <div className='keywordbar'>
+          <input
+              type="text"
+              value={customPhrases}
+              onChange={(e) => setcustomPhrases(e.target.value)}
+              placeholder="Type anything what you want to do......">
+          </input>
+      </div>
       <button className="submit" onClick={sendDataToBackend}>Submit</button>
     </div>
   );

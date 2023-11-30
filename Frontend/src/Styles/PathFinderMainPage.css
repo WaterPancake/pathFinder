@@ -35,7 +35,7 @@ body{
 }
 .destination-calculator-header-buttons label{
     padding: 15px 20px;
-    background: linear-gradient(50deg, #5c5858 37%, #202020 80%);
+    background: linear-gradient(50deg, #413e3e 37%, #605d5d 80%);
     border-radius: 15px;
     font-size: 20px;
     user-select: none;
@@ -107,7 +107,7 @@ label{
     margin-top: 20px;
     font-weight: bold;
     color: #ffffff;
-    background: linear-gradient(50deg, #5c5858 37%, #00000090 80%);
+    background: rgba(0, 0, 0, 0.716);
     border: solid rgba(231, 219, 219, 0.416) 2px;
     border-radius: 70px;
     /* row-gap: 5px;

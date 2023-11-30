@@ -81,30 +81,30 @@ const SignupPage = () => {
                 <span></span>
                 <label><strong>Create your account</strong></label>
                 <h3>Already have an account? <Link to="/user/login">Log in</Link></h3>
-                <h3> <Link to="/pathfinder">Go back</Link></h3>
+                <h3> <Link to="/user/login">Go back</Link></h3>
 
                 <form onSubmit={handleSignup}>
-                <h3 className='first-name'>first name</h3>
+                <h3 className='first-name'>First Name</h3>
                     <input type="text" onChange={(e) =>{setFirstName(e.target.value)}} 
                     value={firstName}
                     className={emptyFields.includes('first-name') ? 'error': ''}/>
 
-                    <h3 className='last-name'>last name</h3>
+                    <h3 className='last-name'>Last Name</h3>
                     <input type="text" onChange={(e) =>{setLastName(e.target.value)}} 
                     value={lastName}
                     className={emptyFields.includes('last-name') ? 'error': ''}/>
 
-                    <h3 className='email'>email</h3>
+                    <h3 className='email'>Email Address</h3>
                     <input type="text" onChange={(e) =>{setEmail(e.target.value)}} 
                     value={email}
                     className={emptyFields.includes('email') ? 'error': ''}/>
 
-                    <h3 className='password'>password</h3>
+                    <h3 className='password'>Password</h3>
                     <input type="password" onChange={(e) =>{setPassword(e.target.value)}} 
                     value={password}
                     className={emptyFields.includes('password') ? 'error': ''}/> <br />
 
-                    <h3 className='confirm-password'>confirm password</h3>
+                    <h3 className='confirm-password'>Confirm Password</h3>
                     <input type="password" onChange={(e) =>{setConfrimPassword(e.target.value)}}
                      value={confirmPassword}
                     className={emptyFields.includes('confirm-password') ? 'error': 'confrim-password'}/> <br />

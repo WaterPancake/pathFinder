@@ -18,7 +18,7 @@
     padding-right: 20px;
 }
 .user-login-screen div.side-display{
-    background-color: #0679ed;
+    background-color: #25272871;
 
 }
 .user-login-screen div.side-display label{
@@ -63,4 +63,19 @@
 .user-login-screen div.main-display img{
     height:100%;
     width: 100%;
+}
+
+.email {
+    font: 25px sans-serif;
+    color: white;
+}
+
+.password {
+    font: 25px sans-serif;
+    color: white;
+}
+
+.remainder {
+    font: 24px sans-serif;
+    color: white;
 }

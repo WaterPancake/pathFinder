@@ -503,8 +503,8 @@ const callML = async() =>{
                 <label className="distination" htmlFor="">Distance: {distance} </label>
                 </div>
                 <div className='routes'>
-                <button className="routebuttons" onClick={() => map.panTo(center)}>reset</button>
-                <button className="routebuttons"  onClick={() => console.log(originRef.current.value, destinationRef.current.value)}>console</button>
+                <button className="routebuttons" onClick={() => map.panTo(center)}>Reset</button>
+                <button className="routebuttons"  onClick={() => console.log(originRef.current.value, destinationRef.current.value)}>Console</button>
                 {/* <button onClick={getLocation}>location</button> */}
                 <button className="routebuttons" onClick={()=>newCalculateRoute()}>Calculate Route</button>
                 <button className="routebuttons" >Try Again</button>
@@ -512,7 +512,7 @@ const callML = async() =>{
                 <button className="routebuttons"  onClick={()=> addWaypoint()}>Add Waypoint Route</button>
                 <button className="routebuttons"  onClick={()=> generateRoutesForUser()}>Find Routes</button>
                 <button className="routebuttons"  onClick={()=>callML()}>Call ML</button>
-                <button className="routebuttons"  onClick={()=>toggleRoutes()}>toggle routes</button>
+                <button className="routebuttons"  onClick={()=>toggleRoutes()}>Toggle routes</button>
                 </div>
                                 {/* {nodesAlongRoute.map((object) => (
                   <label key={object.id}>Lat: {object.lat}, Lng: {object.lng}</label>

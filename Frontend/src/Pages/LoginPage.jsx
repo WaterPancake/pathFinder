@@ -21,24 +21,24 @@ const LoginPage = () => {
         <div className='user-login-screen'>
             <div className="side-display">
                 {/* <img src={MangoMentorsLogo} alt="" /><br /> */}
-                <label><strong>Log in to your account</strong></label>
-                <h3>Don't have an account? <Link to="/user/signup">Sign Up</Link></h3>
-                <h3> <Link to="/pathfinder">Go back</Link></h3>
+                <label className='remainder'><strong>Log in to your account<br /></strong></label>
+                <br/><h3 className='remainder'>Don't have an account? <Link to="/user/signup">Sign Up</Link></h3><br/>
                 <form onSubmit={handleSubmit}>
-                    <h2 className='email'>email</h2>
+                    <h2 className='email'>Email</h2>
                     <input type="text" onChange={(e)=>{setEmail(e.target.value)}} value={email} 
                     className={emptyFields.includes('email') ? 'error': '' }/>
 
-                    <h2 className='password'>password</h2>
+                    <h2 className='password'>Password</h2>
                     <input type="password" onChange={(e)=>{setPassword(e.target.value)}} value={password}
                     className={emptyFields.includes('password') ? 'error': ''} /> <br />
 
-                    <h3>Forgot your password? Click <a href="/">Here</a></h3> <br />
-
+                    <br/><h3 className='remainder'>Forgot your password?</h3> 
+                    <h3 className='remainder'>Click <a href="/">Here</a></h3><br/>
                     {error && <div className="error">{error}</div> }
  
-                    <button disabled={isLoading}>Login</button>
-                    
+                    <button className="login-button" disabled={isLoading}>Login</button>
+
+                    <h3> <Link to="/pathfinder">Skip</Link></h3>
                 </form>
             </div>
             <div className="main-display">

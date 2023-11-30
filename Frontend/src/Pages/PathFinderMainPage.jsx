@@ -485,9 +485,7 @@ const callML = async() =>{
               <label className="where-to-button" htmlFor="Where To?" onClick={handleWhereToButtonClick}>
                 Where To?
               </label>
-              <label className="login-button" htmlFor="login">
-                <Link to="/user/login">Login</Link>
-              </label>
+                <Link to="/user/login"><button className='login-button'>Login</button></Link>
             </div>
             {showDestinationPicker ? ( <div className="DestinationPicker">
                 <Autocomplete>

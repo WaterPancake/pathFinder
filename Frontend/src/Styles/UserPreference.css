@@ -11,7 +11,7 @@
     padding: 30px 30px;
     cursor: pointer;
     border-radius: 40%;
-    font-size: 20px;
+    font-size: 25px;
     margin-right: 30px;
     font-weight: bold;
     color: #ffffff;
@@ -21,15 +21,15 @@
 }
 
 .choice:hover {
-    background: linear-gradient(87deg, #e50808 37%, #cbbaba30 100%);
-    transform: translateY(15px);
-}
+    transition: 0.5s ease-in-out;
+    background: rgb(218, 79, 79);
+    transform: scale(1.2);
+} 
 
 .choice.clicked {
-    background: linear-gradient(87deg, #eb0303 37%, #924545 100%);
+    background: rgb(218, 79, 79);
     border: solid #f0f0f06a 5px;
 }
-
 
 .container {
     display: grid;
@@ -62,7 +62,7 @@
     background-color: black;
     color: white;
     border-radius: 5px;
-    font-size: 15px;
+    font-size: 20px;
     text-align: center;
     margin: 10px 20px 5px 20px;
     cursor: pointer;
@@ -78,53 +78,19 @@
 
 .item:hover {
     background-color: #71707d;
-}
-
-#price {
-    margin-top: 5px;
-    float: left;
-    width: 80%;
-    cursor: pointer;
-    accent-color: red;
-}
-
-#maxValue {
-    width: 10%;
-    background-color: transparent;
-    border: 2px solid rgb(56, 19, 19);
-    border-radius: 5px;
-    font-size: 20px; 
-    color: rgb(255, 255, 255);
-    background: linear-gradient(50deg, #5c5858 37%, #d6d0d090 80%);
-}
-
-#max {
-    margin-top: -5px;
-    border-radius: 30px;
-    padding: 10px 10px;
-    font-size: 15px;
-}
-
-.value {
-    margin-top: -5px;
-    font-size: 25px;
-    text-align: left;
-    color: rgb(246, 249, 243);
-    text-shadow: 2px 2px 4px #000000;
-    font-weight: bold;
+    transform: scale(1.2) rotate(15deg) translate(10px, 10px);
 }
 
 .submit {
-    font-family: Roboto, sans-serif;
+    font-family: sans-serif;
     font-weight: 500;
     font-size: 25px;
-    color: #000000;
-    background: rgba(194, 187, 187, 0.596);
+    color: #f2ecec;
+    background: rgba(12, 12, 12, 0.596);
     padding: 10px 30px;
     border: solid #fafcff 5px;
-    box-shadow: rgb(0, 0, 0) 0px 0px 0px 0px;
+    box-shadow: rgb(252, 248, 248);
     border-radius: 50px;
-    transition : 1583ms;
     transform: translateY(0);
     flex-direction: row;
     align-items: center;
@@ -135,9 +101,10 @@
     transition : 1583ms;
     padding: 10px 50px;
     transform : translateY(-0px);
-    background: linear-gradient(230deg, #5c5858 53%, #ffffff 100%);
+    background: linear-gradient(230deg, #0c0c0c 53%, #ffffff 100%);
     color: #ff0404;
     border: solid 5px #ffffff;
+    letter-spacing: 10px;
 }
 
 .submit.clicked {

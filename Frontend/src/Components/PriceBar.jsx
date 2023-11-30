@@ -1,5 +1,5 @@
 import {useState,  useEffect} from 'react';
-import '../Styles/UserPreference.css';
+import '../Styles/PriceBar.css';
 
 const PriceBar = ({ onValueChange }) => {
 

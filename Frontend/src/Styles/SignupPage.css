@@ -6,28 +6,30 @@
     grid-template-columns: 1fr 4fr;
     height: 100vh;
     text-align:left;
-
 }
 .user-signup-screen div.main-display img{
     width: 400px;
     margin-bottom: 30px;
     margin-left: -30px;
-}
-.user-signup-screen div.main-display , div.main-display{
-    /* display: flex; */
-    padding: 20px 0px 20px 20px;
-    /* flex: 1; */
-}
-.user-signup-screen div.main-display{
-    background-color: #0679ed;
 
 }
+.user-signup-screen div.main-display , div.main-display{
+    padding-left: 50vh;
+    padding-top: 7vh;
+    background-image: url(https://images.pexels.com/photos/2291428/pexels-photo-2291428.jpeg);
+    background-position: 10% 35%;
+    background-size: cover;
+}
+.user-signup-screen div.main-display{
+    color: white;
+}
 .user-signup-screen div.main-display label{
-    font-size: 33px;
-    
+    font-size: 50px;
 }
 .user-signup-screen div.main-display h3{
     margin: 10px 0px;
+    font-size: 30px;
+    font-weight: 500;
 }
 
 .user-signup-screen div.main-display form{
@@ -40,6 +42,7 @@
 }
 .user-signup-screen div.main-display form input.error{
     border: 1px solid var(--error);
+    font-size: 30px;
 }
 .user-signup-screen div.main-display form input[type='text'], .user-signup-screen div.main-display form input[type=password]{
     width: 400px;

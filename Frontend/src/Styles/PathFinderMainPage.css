@@ -26,7 +26,7 @@ body{
     border: 1px solid black;
     padding: 20px;
     box-sizing: content-box;
-    background: linear-gradient(135deg, #5c5858 37%, #4746469b 50%);
+    background: linear-gradient(50deg, #202020 37%, #4746469b 50%);
 }
 .destination-calculator-header-buttons{
     display: grid;
@@ -34,17 +34,20 @@ body{
     gap: 10px;
 }
 .destination-calculator-header-buttons label{
-    padding: 15px 20px;
-    background: linear-gradient(50deg, #413e3e 37%, #605d5d 80%);
+    padding-top: 30px;
+    background: linear-gradient(50deg, #151515 37%, #605d5d 80%);
+    border: solid #fafafad9 5px;
     border-radius: 15px;
-    font-size: 20px;
+    font-size: 40px;
+    font-weight: 500;
     user-select: none;
     border-color: 5px white;
+    transition: background-color 1.5s ease-in-out;
     /* margin-left: 10px; */
 }
 .destination-calculator-header-buttons label:hover{
     cursor: pointer;
-    background: rgba(239, 2, 2, 0.47);
+    background: rgba(239, 2, 2, 0.522);
 }
 .destination-picker{
     display: flex;
@@ -73,18 +76,17 @@ body{
 
 label{
     color:whitesmoke;
-    font-size: 20px;
+    font-size: 25px;
     border-color:5px #000000;
 }
 
 .timing {
-    margin-top: 20px;
+    margin-top: 30px;
 }
 
 .distination {
     color:rgb(15, 15, 15);
     font-size: 20px;
-    background-color: rgba(228, 229, 237, 0.503);
     font-family: Georgia, 'Times New Roman', Times, serif;
     border-color:5px #00000042;
     margin-top: 20px;
@@ -116,5 +118,30 @@ label{
 
 .routebuttons:hover {
     cursor: pointer;
-    background: rgba(239, 2, 2, 0.47);
+    background: rgba(239, 2, 2, 0.601);
+}
+
+.login-button {
+    padding: 35px 90px;
+    background: linear-gradient(50deg, #151515 37%, #605d5d 80%);
+    border: solid #fafafad9 5px;
+    border-radius: 15px;
+    font-size: 35px;
+    user-select: none;
+    border-color: 5px white;
+    color: whitesmoke;
+    transition: background-color 1.5s ease-in-out;
+    font-weight: 500;
+}
+
+.login-button:hover {
+    cursor: pointer;
+    background: rgba(239, 2, 2, 0.521);
+    
+}
+
+.distination{
+    color: white;
+    font-size: 20px;
+    font-weight: 500;
 }

@@ -77,8 +77,6 @@ const SignupPage = () => {
             <div className="side-display">
             </div>
             <div className="main-display">
-
-                <span></span>
                 <label><strong>Create your account</strong></label>
                 <h3>Already have an account? <Link to="/user/login">Log in</Link></h3>
                 <h3> <Link to="/user/login">Go back</Link></h3>
@@ -117,7 +115,6 @@ const SignupPage = () => {
                     {error && <div className="error">{error}</div> }
                     {/* <button disabled={(!agreement)} onClick={handleSignup}>Sign up</button> */}
                     <button disabled={(isLoading || !isAgreementChecked )} onClick={(e)=> handleSignup(e)}>Sign up</button>
-                    
                 </form>
             </div>
         </div>

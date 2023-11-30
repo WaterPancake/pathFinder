@@ -3,11 +3,13 @@ import '../Styles/UserPreference.css';
 import ColorButton from '../Components/ColorButton';
 import ItemDiv from '../Components/ItemDiv';
 import PriceBar from '../Components/PriceBar';
+import RadiuBar from '../Components/RadiuBar';
 
 const UserPreference = ({setSelectedLocations}) => {
   const [visibleSections, setVisibleSections] = useState({});
   const [selectedItems, setSelectedItems] = useState([]);
   const [priceBarValue, setPriceBarValue] = useState(1);
+  const [radiuBarValue, setRadiuBarValue] = useState(1);
 
   const toggleVisibility = (section) => {
 
@@ -39,11 +41,17 @@ const UserPreference = ({setSelectedLocations}) => {
     console.log(newValue)
   };
 
+  const handleRadiuChange = (newValue) => {
+    setRadiuBarValue(newValue);
+    console.log(newValue)
+  };
+
   const sendDataToBackend = () => {
     console.log(selectedItems)
     const dataToSend = {
       preference: selectedItems,
-      max_price: priceBarValue
+      max_price: priceBarValue,
+      max_radiu: radiuBarValue
     };
     
     fetch("/preference", {
@@ -128,7 +136,9 @@ const UserPreference = ({setSelectedLocations}) => {
       )}
 
       <PriceBar onValueChange={handlePriceChange} />
+      <RadiuBar onRadiuChange={handleRadiuChange} />
       <button className="submit" onClick={sendDataToBackend}>Submit</button>
+
     </div>
   );
 };

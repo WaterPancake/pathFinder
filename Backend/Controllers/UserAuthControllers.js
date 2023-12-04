@@ -49,8 +49,9 @@ const userLogin = async (req, res) =>{
     if(!match){
         return res.status(409).json({error:"Incorrect password"})
     }
-    const returnJWT = await createtoken(password,isEmailInUse.Document.docs[0].id,firstName)
-    return res.status(200).json({mssg: "Successfull Login",returnJWT})
+    const returnJWT = await createtoken(password,isEmailInUse.Document.docs[0].id,isEmailInUse.Document.docs[0].firstName)
+    console.log("isEmailInUse.Document.docs[0].id: ",isEmailInUse.Document.docs[0].id)
+    return res.status(200).json({mssg: "Successfull Login", returnJWT})
 
 }
 

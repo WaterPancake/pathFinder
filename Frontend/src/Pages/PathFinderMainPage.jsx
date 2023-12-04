@@ -1,13 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {useJsApiLoader,Autocomplete } from '@react-google-maps/api';
 import { Link } from 'react-router-dom';
-
+import { useAuthContext } from '../Hooks/useAuthContext';
+import { useLogout } from '../Hooks/useLogout';
 import '../Styles/PathFinderMainPage.css';
 import UserPreference from '../Components/UserPreference';
 
 import '../Styles/UserPreference.css';
 
 const PathFinderMainPage = () => {
+  const {user} = useAuthContext();
+  const {logout} = useLogout();
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
@@ -460,9 +463,8 @@ const callML = async() =>{
               <label className="where-to-button" htmlFor="Where To?" onClick={handleWhereToButtonClick}>
                 Where To?
               </label>
-              <label className="login-button" htmlFor="login">
-                <Link to="/user/login">Login</Link>
-              </label>
+              {user? <label htmlFor="" onClick={()=>logout()}>Logout</label> : <Link to="/user/login"> Login </Link> }
+
             </div>
             {showDestinationPicker ? ( <div className="DestinationPicker">
                 <Autocomplete>

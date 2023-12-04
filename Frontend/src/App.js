@@ -7,13 +7,13 @@ import PathFinderMainPage from './Pages/PathFinderMainPage';
 
 import { useAuthContext } from './Hooks/useAuthContext';
 function App() {
-  const {user,dispatch} = useAuthContext();
+  const {user} = useAuthContext();
   return (
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route exact path = '/user/login' element={<LoginPage/>}/>
-          <Route exact path = '/user/signup' element={<SignupPage/>}/>
+          <Route exact path = '/user/login' element={!user ? <LoginPage/> : <Navigate to= '/pathfinder'/>} />
+          <Route exact path = '/user/signup' element={!user ? <SignupPage/> : <Navigate to= '/pathfinder'/>} />
           <Route exact path = '/' element={user? <PathFinderMainPage/>: <Navigate to= '/user/login'/>}/>
           <Route exact path = '/pathfinder' element={<PathFinderMainPage/>}/>
         </Routes>

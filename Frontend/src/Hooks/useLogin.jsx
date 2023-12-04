@@ -34,7 +34,7 @@ export const useLogin = () =>{
             if(response.ok)
             {
                 setIsLoading(false)
-                alert(json.mssg, json.userAccount)
+                alert(json.mssg, json.userAccount, json.returnJWT)
 
                 // dispatch({type:"LOGIN", payload:json})
                 // localStorage.setItem('user',JSON.stringify(json))

@@ -1,6 +1,8 @@
 const bcrypt = require('bcrypt')
 const validator = require('validator')
 const {db} = require('../firebase')
+const jwt = require('jsonwebtoken')
+require('dotenv').config();
 
 const checkIsEmailInUse = async(email, checkAndRetrieve = false) =>{
     console.log(email)
@@ -14,10 +16,16 @@ const checkIsEmailInUse = async(email, checkAndRetrieve = false) =>{
             return (checkAndRetrieve ? {isInUse:true, Document:querySnapshot} : true);
         }
         
-   } catch (error) {
-    throw(error);
+    } catch (error) {
+        throw(error);
+
+    }
+}
+
+const createtoken = async (_id,firstName) =>{
+    console.log("createtoken: ",_id, firstName, process.env.SECRET);
     
-   }
+    return  jwt.sign({_id, firstName}, process.env.SECRET, { expiresIn: '10h' })
 }
 
 const userLogin = async (req, res) =>{
@@ -31,19 +39,18 @@ const userLogin = async (req, res) =>{
     }
     const isEmailInUse = await checkIsEmailInUse(email, true)
 
-    if(!isEmailInUse.isInUse)
-    {
+    if(!isEmailInUse.isInUse){
         return res.status(409).json({error:"Incorrect email or password"})
     }
     console.log(isEmailInUse.Document.docs[0].get('password'))
-    
+     
     const match = await bcrypt.compare(password,isEmailInUse.Document.docs[0].get('password'))
 
     if(!match){
         return res.status(409).json({error:"Incorrect password"})
     }
-
-    return res.status(200).json({mssg: "Successfull Login"})
+    const returnJWT = await createtoken(password,isEmailInUse.Document.docs[0].id,firstName)
+    return res.status(200).json({mssg: "Successfull Login",returnJWT})
 
 }
 
@@ -69,16 +76,41 @@ const userSignup = async(req, res) =>{
         return res.status(204).json({error: "Invalid passowrd"});
         
     }
+    const userObject = { firstName, lastName, email};
+    const userAccount = await userRef.add(userObject);
+    const userAccountSnapshop = await userAccount.get()
+
     try {
         const salt = await bcrypt.genSalt(10);
         const hash = await bcrypt.hash(password, salt);
-        const userObject = { firstName, lastName, email, password: hash };
-        const userAccount = await userRef.add(userObject);
-        return res.status(201).json({ mssg: "Account was created", userAccount });
+        console.log("userAccountSnapshop.id ",userAccountSnapshop.id);
+        userAccount.update({password:hash});
+        const returnJWT = await createtoken(userAccountSnapshop.id,firstName);
+        console.log("DId not fail")
+        return res.status(201).json({ mssg: "Account was created", userAccount, returnJWT});
     } catch (error) {
+        if(userAccountSnapshop && userAccountSnapshop.exists) {
+            await userAccountSnapshop.ref.delete();
+        }
         return res.status(500).json({ error: "Internal server error" });
     }
+    
 
 }
 
 module.exports = {userLogin, userSignup}
+// try {
+    //     const salt = await bcrypt.genSalt(10);
+    //     const hash = await bcrypt.hash(password, salt);
+    //     const userObject = { firstName, lastName, email, password: hash };
+    //     const userAccount = await userRef.add(userObject);
+    //     const userAccountSnapshop = await userAccount.get()
+    //     console.log("userAccountSnapshop.id ",userAccountSnapshop.id);
+    //     const returnJWT = await createtoken(userAccountSnapshop.id,firstName)
+    //     return res.status(201).json({ mssg: "Account was created", userAccount});
+    // } catch (error) {
+    //     if(userAccountSnapshop && userAccountSnapshop.exists) {
+    //         await userAccountSnapshop.ref.delete();
+    //     }
+    //     return res.status(500).json({ error: "Internal server error" });
+    // }

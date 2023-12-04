@@ -31,7 +31,7 @@ export const useSignup = () =>{
             setIsLoading(false)
             // dispatch({type:'LOGIN', payload:json})
             // localStorage.setItem('user',JSON.stringify(json))
-            alert(json.mssg, json.userAccount)
+            alert(json.mssg, json.userAccount, json.returnJWT)
 
         }
 

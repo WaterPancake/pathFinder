@@ -349,7 +349,7 @@ const generateRoutesForUser = async()=>{
   })
 
     results = await results.json();
-    console.log(results)
+    // console.log(results)
     /**This Calculates a route for each set of waypoints from the api */
     //Get the origin coordinates
     const origin = originRef.current.value;

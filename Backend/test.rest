@@ -42,3 +42,8 @@ content-type: application/json
     "email":"ABCab1@gmail.com",
     "password":"ABCabc123!@#"
 }
+
+###
+Post http://localhost:8000/user/info
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiJibU9tQlJUNHc5UHVXVVJwNDkxWiIsImZpcnN0TmFtZSI6IlRob21hcyIsImlhdCI6MTcwMjg0NDM4OCwiZXhwIjoxNzAyODgwMzg4fQ.d-UOPgVVt3pLHB2U4k0IYwLOKv-Dz_3AqfuHGJvArSs
+content-type: application/json

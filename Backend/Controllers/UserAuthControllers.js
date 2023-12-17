@@ -23,12 +23,12 @@ const checkIsEmailInUse = async(email, checkAndRetrieve = false) =>{
 }
 
 const createtoken = async (_id,firstName) =>{
-    console.log("createtoken: ",_id, firstName, process.env.SECRET);
-    
+    // console.log("createtoken: ",_id, firstName, process.env.SECRET);
     return  jwt.sign({_id, firstName}, process.env.SECRET, { expiresIn: '10h' })
 }
 
 const userLogin = async (req, res) =>{
+    console.log("process.env.SECRET: ",process.env.SECRET)
     const {email, password } = req.body;
 
     if(!email || !password){
@@ -42,21 +42,21 @@ const userLogin = async (req, res) =>{
     if(!isEmailInUse.isInUse){
         return res.status(409).json({error:"Incorrect email or password"})
     }
-    console.log(isEmailInUse.Document.docs[0].get('password'))
+    // console.log(isEmailInUse.Document.docs[0].get('password'))
      
     const match = await bcrypt.compare(password,isEmailInUse.Document.docs[0].get('password'))
 
     if(!match){
         return res.status(409).json({error:"Incorrect password"})
     }
-    const returnJWT = await createtoken(password,isEmailInUse.Document.docs[0].id,isEmailInUse.Document.docs[0].firstName)
-    console.log("isEmailInUse.Document.docs[0].id: ",isEmailInUse.Document.docs[0].id)
-    return res.status(200).json({mssg: "Successfull Login", returnJWT})
+    const returnJWT = await createtoken(isEmailInUse.Document.docs[0].id,isEmailInUse.Document.docs[0].data().firstName)
+    // console.log("isEmailInUse.Document.docs[0].id: ",isEmailInUse.Document.docs[0].id)
+    return res.status(200).json({_id:isEmailInUse.Document.docs[0].id, firstName:isEmailInUse.Document.docs[0].data().firstName,mssg: "Successfull Login", returnJWT})
 
 }
 
 const userSignup = async(req, res) =>{ 
-    console.log("called")
+    // console.log("called")
     const userRef = db.collection('User_Accounts')
     
     const {firstName,lastName, email, password } = req.body;
@@ -73,7 +73,6 @@ const userSignup = async(req, res) =>{
     }
 
     if(!validator.isStrongPassword(password)){
-        console.log("Here PAss")
         return res.status(400).json({error: "Invalid password"});
         
     }
@@ -84,11 +83,9 @@ const userSignup = async(req, res) =>{
     try {
         const salt = await bcrypt.genSalt(10);
         const hash = await bcrypt.hash(password, salt);
-        console.log("userAccountSnapshop.id ",userAccountSnapshop.id);
-        userAccount.update({password:hash});
+        await userAccount.update({password:hash});
         const returnJWT = await createtoken(userAccountSnapshop.id,firstName);
-        console.log("DId not fail")
-        return res.status(201).json({ mssg: "Account was created", userAccount, returnJWT});
+        return res.status(201).json({_id:userAccountSnapshop.id, mssg: "Account was created", firstName, returnJWT});
     } catch (error) {
         if(userAccountSnapshop && userAccountSnapshop.exists) {
             await userAccountSnapshop.ref.delete();

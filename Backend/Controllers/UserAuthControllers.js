@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken')
 require('dotenv').config();
 
 const checkIsEmailInUse = async(email, checkAndRetrieve = false) =>{
-    console.log(email)
+    // console.log(email)
     const userRef = db.collection('User_Accounts')
    try {
         const querySnapshot = await userRef.where('email', '==', email).get();
@@ -58,23 +58,23 @@ const userLogin = async (req, res) =>{
 const userSignup = async(req, res) =>{ 
     console.log("called")
     const userRef = db.collection('User_Accounts')
-
+    
     const {firstName,lastName, email, password } = req.body;
     if(!firstName || !lastName || !email || !password){
-        return res.status(204).json({error: "All fields must be filled"});
+        return res.status(400).json({error: "All fields must be filled"});
     }
     if(!validator.isEmail(email)){
-        return res.status(204).json({error: "Invalid email"});
+        return res.status(400).json({error: "Invalid email"});
     }
     const isEmailInUse = await checkIsEmailInUse(email)
-
-    if(isEmailInUse === true)
-    {
-        return res.status(409).json({ error: "Email is in use" });
-    }
     
+    if(isEmailInUse === true){
+        return res.status(400).json({ error: "Email is in use" });
+    }
+
     if(!validator.isStrongPassword(password)){
-        return res.status(204).json({error: "Invalid passowrd"});
+        console.log("Here PAss")
+        return res.status(400).json({error: "Invalid password"});
         
     }
     const userObject = { firstName, lastName, email};

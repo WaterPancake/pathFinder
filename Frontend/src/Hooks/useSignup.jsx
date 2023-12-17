@@ -18,7 +18,7 @@ export const useSignup = () =>{
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({email,password,firstName,lastName})
         });
-
+        // console.log("HERE");
         const json =  await response.json() 
 
         if(!response.ok)
@@ -32,9 +32,10 @@ export const useSignup = () =>{
             dispatch({type:'LOGIN', payload:json});
             localStorage.setItem('user',JSON.stringify(json.returnJWT))
             // alert(json.mssg, json.userAccount, json.returnJWT)
-
+        
         }
-
+        
+            // setIsLoading(false);
         
 
     }

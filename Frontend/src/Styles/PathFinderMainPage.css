@@ -135,4 +135,10 @@ label{
     user-select: none;
     border-color: 5px white;
     border: 2px solid black;
+    color:whitesmoke;
+    text-decoration: none;
+}
+.destination-calculator-header-buttons a:hover{
+    cursor: pointer;
+    background: rgba(239, 2, 2, 0.47);
 }

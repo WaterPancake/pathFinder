@@ -4,11 +4,14 @@ import './App.css';
 import LoginPage from './Pages/LoginPage'
 import SignupPage from './Pages/SignupPage'
 import PathFinderMainPage from './Pages/PathFinderMainPage';
+import HomePage from './Pages/HomePage';
+
 function App() {
   return (
     <div className="App">
       <BrowserRouter>
         <Routes>
+          <Route exact path = '/homepage' element={<HomePage/>}/>
           <Route exact path = '/user/login' element={<LoginPage/>}/>
           <Route exact path = '/user/signup' element={<SignupPage/>}/>
           <Route exact path = '/' element={<LoginPage/>}/>

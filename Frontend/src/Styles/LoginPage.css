@@ -55,7 +55,7 @@
 }
 
 .user-login-screen div.main-display{
-    background-size: 80%;
+    background-size: 100%;
     padding: 0;
     background-size: cover;
     background-repeat: no-repeat;
@@ -69,29 +69,29 @@
 }
 
 .email {
-    padding-top: 20px;
-    font: 25px sans-serif;
+    padding-top: 10px;
+    font: 20px sans-serif;
     color: white;
 }
 
 .password {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    font: 25px sans-serif;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    font: 20px sans-serif;
     color: white;
 }
 
 .remainder {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    font: 26px sans-serif;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    font: 20px sans-serif;
     color: white;
     
 }
 
 .loginbutton {
-    padding-top: 10px;
-    padding-bottom: 20px;
+    padding-left: 30px;
+    padding-right: 30px;
     background-color: black;
     color: white;
     border-radius: 5px;
@@ -103,7 +103,8 @@
 }
 
 .skip-button {
-    padding: 10px 60px 10px 60px;
+    padding-left: 30px;
+    padding-right: 30px;
     background-color: black;
     color: white;
     border-radius: 5px;
@@ -136,7 +137,7 @@
 
 .sign-up-button{
     margin-top: 10px;
-    padding: 10px;
+    padding: 1px;
     background-color: black;
     color: white;
     border-radius: 5px;
@@ -162,13 +163,13 @@
 .main-display
 {
     width: 100% !important;
-    height: 68% !important;
+    height: 100% !important;
 }
 
 .here-button{
     margin-left: 10px;
     margin-top: 10px;
-    padding: 10px;
+    
     background-color: black;
     color: white;
     border-radius: 5px;
@@ -177,7 +178,7 @@
     cursor: pointer;
     font-weight: 500;
     border: solid #fafafad9 5px;
-    width: 100px;
+    width: 150px;
 }
 
 .here-button:hover

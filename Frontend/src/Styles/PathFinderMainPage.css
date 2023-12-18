@@ -92,12 +92,17 @@ label{
     margin-top: 30px;
 }
 
+
+.DestinationPicker{
+    margin-top: 20px;
+}
+
 .distination {
     color:rgb(15, 15, 15);
     font-size: 20px;
     font-family: Georgia, 'Times New Roman', Times, serif;
     border-color:5px #00000042;
-    margin-top: 20px;
+    margin-top: 30px;
 }
 
 .routes {

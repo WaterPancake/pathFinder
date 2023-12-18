@@ -49,7 +49,7 @@ const LoginPage = () => {
                     {error && <div className="error">{error}</div> }
                     
                     <div className='buttons'>
-                        <button className="skip-button" disabled={isLoading}>Login</button>
+                        <button className="loginbutton" disabled={isLoading}>Login</button>
                         <Link to="/pathfinder"><button className='skip-button'>Skip</button></Link>
                     </div>
                 </form>

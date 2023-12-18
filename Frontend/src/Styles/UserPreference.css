@@ -6,16 +6,16 @@
 }
 
 .choice {
-    padding: 10px 20px;
+    padding: 10px;
     cursor: pointer;
     border-radius: 40%;
-    font-size: 25px;
+    font-size: 20px;
     font-weight: bold;
     color: #ffffff;
     background: rgba(0, 0, 0, 0.623);
     border: solid #0d0d0d6a 5px;
     border-radius: 50px;
-    width: 300px;
+    width: 200px;
 }
 
 .choice:hover {
@@ -56,11 +56,11 @@
 .item {
     border: none;
     outline: none;
-    padding: 10px 10px;
+    padding: 5px;
     background-color: black;
     color: white;
     border-radius: 5px;
-    font-size: 20px;
+    font-size: 15px;
     text-align: center;
     margin: 10px 20px 5px 20px;
     cursor: pointer;

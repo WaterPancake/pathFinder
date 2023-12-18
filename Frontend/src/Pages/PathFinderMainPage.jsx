@@ -10,6 +10,7 @@ import '../Styles/UserPreference.css';
 
 const PathFinderMainPage = () => {
   const {user} = useAuthContext();
+
   const {logout} = useLogout();
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
@@ -185,10 +186,6 @@ useEffect(()=>{
 
     setDirectionService(new window.google.maps.DirectionsService());
     setDirectionRenderer(new window.google.maps.DirectionsRenderer());
-  
-     
-    
-
   }
   
 },[isLoaded,showMap,location])
@@ -336,7 +333,7 @@ const generateRoutesForUser = async()=>{
     setDistance(``);
     setDuration(``);
   //   //URL to be changbed 
-    let results = await fetch('http://localhost:5000/find_endpoint',{
+    let results = await fetch('http://localhost:3001/find_endpoint',{
           method:"POST",
           headers:{'Content-Type': 'application/json'},
           body:JSON.stringify({
@@ -345,51 +342,53 @@ const generateRoutesForUser = async()=>{
                 { lat: nodesAlongRoute[1].lat, lng:nodesAlongRoute[1].lng },
                 { lat: nodesAlongRoute[2].lat, lng: nodesAlongRoute[2].lng }
             ],
-            keywords: selectedLocations
-        }), mode: 'cors'
+            keywords: selectedLocations,
+            radius:1000
+        })
       } 
     )
 
-  //   results = await results.json();
-  //   // console.log(results)
-  //   /**This Calculates a route for each set of waypoints from the api */
-  //   //Get the origin coordinates
-  //   const origin = originRef.current.value;
-  //   //get the destination coordinates
-  //   const destination = destinationRef.current.value;
-  //   //results.routeWayPoints is subject to change
-  //   // setCalculatedRouteWaypoints(results.routeWayPoints);
-  //    //For each array of waypoints
-    
-  //    setGeneratedRoutes((prev)=>[...prev,directionsArray[0]]);
-  //    results.forEach((waypoint)=>{
-  //     let stopoverWaypoints = []
-  //     //creates a waypoint object and saves it to an array 
-  //         stopoverWaypoints.push({location:waypoint, stopover:true});
-  //         setCalculatedRouteWaypoints((prev)=>[...prev,waypoint] )
-  //         // They way Wu is setting up the list is causing the python server to crash
-  //         // console.log({location:waypoint, stopover:true})
-  //         //create the DirectionService request object
-  //     const request = {
-  //       origin,
-  //       destination,
-  //       travelMode: 'DRIVING',
-  //       waypoints:stopoverWaypoints,
-  //       optimizeWaypoints: true
-  //     };
-  //     //Uses the directionService.route to generate a route and saves it to generated route
-  //     directionService.route(request, (result,status) =>{
-  //       if(status === 'OK')
-  //       {console.log("OK")
-  //         setGeneratedRoutes((prev)=>[...prev,result]);
+    results = await results.json();
+    // console.log(results)
+    /**This Calculates a route for each set of waypoints from the api */
+    //Get the origin coordinates
+    const origin = originRef.current.value;
+    //get the destination coordinates
+    const destination = destinationRef.current.value;
+    //results.routeWayPoints is subject to change
+    // setCalculatedRouteWaypoints(results.routeWayPoints);
+     //For each array of waypoints
+    // console.log(results)
+    // console.log(results.results)
+     setGeneratedRoutes((prev)=>[...prev,directionsArray[0]]);
+     results.results.forEach((waypoint)=>{
+      let stopoverWaypoints = []
+      //creates a waypoint object and saves it to an array 
+          stopoverWaypoints.push({location:waypoint, stopover:true});
+          setCalculatedRouteWaypoints((prev)=>[...prev,waypoint] )
+          // They way Wu is setting up the list is causing the python server to crash
+          // console.log({location:waypoint, stopover:true})
+          //create the DirectionService request object
+      const request = {
+        origin,
+        destination,
+        travelMode: 'DRIVING',
+        waypoints:stopoverWaypoints,
+        optimizeWaypoints: true
+      };
+      //Uses the directionService.route to generate a route and saves it to generated route
+      directionService.route(request, (result,status) =>{
+        if(status === 'OK')
+        {console.log("OK")
+          setGeneratedRoutes((prev)=>[...prev,result]);
 
-  //       }
-  //       else{
-  //         alert(status);
-  //       }
-  //     })
+        }
+        else{
+          alert(status);
+        }
+      })
           
-  //   })
+    })
     
   }
   setIsLoading(false);
@@ -423,34 +422,66 @@ const selectRoute = (routeIndex)=>{
 }
 const callML = async() =>{
 
-  fetch('http://localhost:5000/POI',{
+  fetch('http://localhost:3001/find_endpoint',{
     method:"POST",
     headers:{'Content-Type': 'application/json'},
     body:JSON.stringify({
       cordinates: [
-          {
-              lat: 40.728728,
-              lng: -73.982614
-          },
-          {
-              lat: 40.767867,
-              lng: -73.964271
-          },
-          {
-              lat: 40.710601,
-              lng: -73.960901
-          }
-      ],
-      keywords: ["Cafe"]
-  } )
+            {
+                lat: 40.728728,
+                lng: -73.982614
+            },
+            {
+                lat: 40.767867,
+                lng: -73.964271
+            },
+            {
+                lat: 40.710601,
+                lng: -73.960901
+            }
+        ],
+        radius:1000,
+        keywords: ["cafe","bakery"]
+  })
   })
   .then(result => result.json())
   .then(data => {
-    data.forEach((object)=>{
-      console.log(object)
-    })
+    console.log(data)
   })
   
+}
+const saveWaypoint = async(waypoint) =>{
+  console.log(waypoint)
+  const origin = originRef.current.value;
+  const destination = destinationRef.current.value;
+  const route = {origin, waypoint, destination}
+  const token = localStorage.getItem('user-token')
+  console.log(user.returnJWT)
+  const response = await fetch('http://localhost:8000/user/info/save-waypoint',
+    {
+      method:"POST",
+      headers:{'Content-Type': 'application/json','Authorization': `Bearer ${user.returnJWT}`},
+      body:JSON.stringify({route})
+    } 
+  )
+  const result = await response.json();
+  if(response.ok){
+    alert(result.mssg);
+  }else{
+    alert()
+  }
+
+  const getSavedRoutes = async()=>{
+    const response = await fetch('http://localhost:8000/user/info/save-waypoint',
+      {
+        method:"POST",
+        headers:{'Content-Type': 'application/json','Authorization': `Bearer ${user.returnJWT}`},
+
+      } 
+    )
+
+  }
+
 }
     return (
     <div className="PathFinderMapPage">
@@ -475,6 +506,7 @@ const callML = async() =>{
                 <Autocomplete>
                     <input ref={destinationRef} type="text" name="" id="" placeholder="Choose a destination..."  />
                 </Autocomplete>
+                {user && <label htmlFor="">Favorited Routes</label>}
             </div>): null}
             <div className="customize-trip"></div>
                 <label htmlFor="">Duration: {duration} </label>
@@ -487,7 +519,7 @@ const callML = async() =>{
                 <button onClick={()=> newClearRoute()}>Clear Route</button>
                 {/* <button onClick={()=> addWaypoint()}>Add Waypoint Route</button> */}
                 <button onClick={()=> generateRoutesForUser()}>Find Routes</button>
-                {/* <button onClick={()=>callML()}>Call ML</button> */}
+                <button onClick={()=>callML()}>Call ML</button>
                 {/* <button onClick={()=>toggleRoutes()}>toggle routes</button> */}
                                 {/* {nodesAlongRoute.map((object) => (
                   <label key={object.id}>Lat: {object.lat}, Lng: {object.lng}</label>
@@ -502,7 +534,8 @@ const callML = async() =>{
                     <button className='select-route-button' onClick={()=>selectRoute(index)}>{`route ${index+1}`}</button>
                   </div>)
                     }else{
-                      return(<div key={index} className="route-details">
+                      return( <div key={index} className="route-details">
+                        {user && <button onClick={()=>saveWaypoint(route.geocoded_waypoints[index].place_id)}>Save</button>}
                         <label htmlFor="">{calculatedRouteWaypoints[index-1].name}</label>
                       <button className='select-route-button' onClick={()=>selectRoute(index)}>{`route ${index+1}`}</button>
                     </div>)
@@ -520,27 +553,3 @@ const callML = async() =>{
 
 export default PathFinderMainPage;
  
- // //For each array of waypoints
-    // results.routeWaypoints.forEach((route)=>{
-    //   let stopoverWaypoints = []
-    //   //creates a waypoint object and saves it to an array 
-    //   route.forEach((waypoint)=>{
-    //       stopoverWaypoints.push({location:waypoint, stopover:true});
-    //   })
-    //   //create the DirectionService request object
-    //   const request = {
-    //     origin,
-    //     destination,
-    //     travelMode: 'DRIVING',
-    //     waypoint:stopoverWaypoints,
-    //     optimizeWaypoints: true
-    //   };
-    //   //Uses the directionService.route to generate a route and saves it to generated route
-    //   directionService.route(request, (result,status) =>{
-    //     if(status === 'OK')
-    //     {
-    //       setGeneratedRoutes((prev)=>[...prev,result]);
-
-    //     }
-    //   })
-    // })

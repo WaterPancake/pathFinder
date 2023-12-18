@@ -44,6 +44,17 @@ content-type: application/json
 }
 
 ###
-Post http://localhost:8000/user/info
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiJibU9tQlJUNHc5UHVXVVJwNDkxWiIsImZpcnN0TmFtZSI6IlRob21hcyIsImlhdCI6MTcwMjg0NDM4OCwiZXhwIjoxNzAyODgwMzg4fQ.d-UOPgVVt3pLHB2U4k0IYwLOKv-Dz_3AqfuHGJvArSs
+Post http://localhost:8000/user/info/save-waypoint
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI3RkQyME1mdDh0NU9aWnpZYWdpOCIsImZpcnN0TmFtZSI6IlRhaGoiLCJpYXQiOjE3MDI5MTM4MjAsImV4cCI6MTcwMjk0OTgyMH0.5G9j_z3FG0dldbwTlRfBbPXHIHHf79JuEH5ZfQckt_8
 content-type: application/json
+
+{
+    "waypoint": "ChIJmUOhC0rOwokRCfyw8Ib0b5o"
+}
+ 
+###
+Post http://localhost:8000/user/info/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiJoZXZOTkI0RU1SSzhxWEg1dFdPWCIsImZpcnN0TmFtZSI6IlRhaGoiLCJpYXQiOjE3MDI5MTYwNzUsImV4cCI6MTcwMjk1MjA3NX0.3-jO7HFYQsq-RAZS9nXu76wd71mdhROU0AZepFrXULs
+content-type: application/json
+
+ 

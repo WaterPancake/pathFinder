@@ -1,23 +1,21 @@
 .filter {
     display: grid;
     margin-top: 30px;
-    width: 100%;
-    float: left;
-    grid-template-columns: auto auto auto auto;
+    grid-template-columns: auto auto;
     margin-bottom: 10px;
 }
 
 .choice {
-    padding: 30px 30px;
+    padding: 10px 20px;
     cursor: pointer;
     border-radius: 40%;
     font-size: 25px;
-    margin-right: 30px;
     font-weight: bold;
     color: #ffffff;
     background: rgba(0, 0, 0, 0.623);
     border: solid #0d0d0d6a 5px;
     border-radius: 50px;
+    width: 300px;
 }
 
 .choice:hover {
@@ -87,11 +85,10 @@
     font-size: 25px;
     color: #f2ecec;
     background: rgba(12, 12, 12, 0.596);
-    padding: 10px 30px;
+    padding: 10px 20px;
     border: solid #fafcff 5px;
     box-shadow: rgb(252, 248, 248);
     border-radius: 50px;
-    transform: translateY(0);
     flex-direction: row;
     align-items: center;
     cursor: pointer;
@@ -99,16 +96,15 @@
 
 .submit:hover {
     transition : 1583ms;
-    padding: 10px 50px;
-    transform : translateY(-0px);
-    background: linear-gradient(230deg, #0c0c0c 53%, #ffffff 100%);
-    color: #ff0404;
+    padding: 10px 30px;
+    background: black;
+    background: rgb(218, 79, 79);
     border: solid 5px #ffffff;
-    letter-spacing: 10px;
+    transform: scale(1.2);
 }
 
 .submit.clicked {
     background-color: rgb(3, 3, 3);
     color:#f4f4f4;
-    transform: translateY(4px);
+    transform: scale(1.2);
 }

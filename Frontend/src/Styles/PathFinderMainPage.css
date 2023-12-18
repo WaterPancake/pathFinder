@@ -34,21 +34,29 @@ body{
     gap: 10px;
 }
 .destination-calculator-header-buttons label{
-    padding-top: 30px;
-    background: linear-gradient(50deg, #151515 37%, #605d5d 80%);
+    background: black;
     border: solid #fafafad9 5px;
     border-radius: 15px;
-    font-size: 40px;
+    font-size: 30px;
     font-weight: 500;
     user-select: none;
     border-color: 5px white;
-    transition: background-color 1.5s ease-in-out;
+    transition: background-color 1.0s ease-in-out;
+    margin-left: 30px;
+    width: 300px;
     /* margin-left: 10px; */
 }
 .destination-calculator-header-buttons label:hover{
     cursor: pointer;
     background: rgba(239, 2, 2, 0.522);
+    transform: scale(1.1);
 }
+
+.destination-calculator-header-buttons label.clicked{
+    background: rgb(218, 79, 79);
+    border: solid #f0f0f06a 5px;
+}
+
 .destination-picker{
     display: flex;
     flex-direction: column;
@@ -76,7 +84,7 @@ body{
 
 label{
     color:whitesmoke;
-    font-size: 25px;
+    font-size: 20px;
     border-color:5px #000000;
 }
 
@@ -122,26 +130,31 @@ label{
 }
 
 .login-button {
-    padding: 35px 90px;
-    background: linear-gradient(50deg, #151515 37%, #605d5d 80%);
+    padding: 10px 10px;
+    background: black;
     border: solid #fafafad9 5px;
     border-radius: 15px;
-    font-size: 35px;
+    font-size: 20px;
     user-select: none;
     border-color: 5px white;
     color: whitesmoke;
-    transition: background-color 1.5s ease-in-out;
-    font-weight: 500;
+    transition: background-color 1.0s ease-in-out;
+    font-weight: 2000;
+    width: 250px;
+    font-weight: bold;
+    margin-right: 30px;
 }
 
 .login-button:hover {
     cursor: pointer;
-    background: rgba(239, 2, 2, 0.521);
-    
+    background: rgb(218, 79, 79);
+    transform: scale(1.1);
 }
+
 
 .distination{
     color: white;
     font-size: 20px;
     font-weight: 500;
 }
+

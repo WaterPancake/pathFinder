@@ -77,44 +77,43 @@ const SignupPage = () => {
             <div className="side-display">
             </div>
             <div className="main-display">
-                <label><strong>Create your account</strong></label>
-                <h3>Already have an account? <Link to="/user/login">Log in</Link></h3>
-                <h3> <Link to="/user/login">Go back</Link></h3>
-
                 <form onSubmit={handleSignup}>
-                <h3 className='first-name'>First Name</h3>
-                    <input type="text" onChange={(e) =>{setFirstName(e.target.value)}} 
-                    value={firstName}
-                    className={emptyFields.includes('first-name') ? 'error': ''}/>
+                    <label className="creating">Create your account</label>
+                        <h3 className='first-name'>First Name</h3>
+                        <input type="text" onChange={(e) =>{setFirstName(e.target.value)}} 
+                        value={firstName}
+                        className={emptyFields.includes('first-name') ? 'error': ''}/>
 
-                    <h3 className='last-name'>Last Name</h3>
-                    <input type="text" onChange={(e) =>{setLastName(e.target.value)}} 
-                    value={lastName}
-                    className={emptyFields.includes('last-name') ? 'error': ''}/>
+                        <h3 className='last-name'>Last Name</h3>
+                        <input type="text" onChange={(e) =>{setLastName(e.target.value)}} 
+                        value={lastName}
+                        className={emptyFields.includes('last-name') ? 'error': ''}/>
 
-                    <h3 className='email'>Email Address</h3>
-                    <input type="text" onChange={(e) =>{setEmail(e.target.value)}} 
-                    value={email}
-                    className={emptyFields.includes('email') ? 'error': ''}/>
+                        <h3 className='email'>Email Address</h3>
+                        <input type="text" onChange={(e) =>{setEmail(e.target.value)}} 
+                        value={email}
+                        className={emptyFields.includes('email') ? 'error': ''}/>
 
-                    <h3 className='password'>Password</h3>
-                    <input type="password" onChange={(e) =>{setPassword(e.target.value)}} 
-                    value={password}
-                    className={emptyFields.includes('password') ? 'error': ''}/> <br />
+                        <h3 className='password'>Password</h3>
+                        <input type="password" onChange={(e) =>{setPassword(e.target.value)}} 
+                        value={password}
+                        className={emptyFields.includes('password') ? 'error': ''}/> <br />
 
-                    <h3 className='confirm-password'>Confirm Password</h3>
-                    <input type="password" onChange={(e) =>{setConfrimPassword(e.target.value)}}
-                     value={confirmPassword}
-                    className={emptyFields.includes('confirm-password') ? 'error': 'confrim-password'}/> <br />
-
-                    <input type="checkbox"
-                    value={isAgreementChecked}
-                    onChange={handleAgreementCheck} />
-                    <label htmlFor="">
-                    I accept the <a href="/">Privacy Policy</a> and the <a href="/">Terms of Service</a></label> <br/>
-                    {error && <div className="error">{error}</div> }
-                    {/* <button disabled={(!agreement)} onClick={handleSignup}>Sign up</button> */}
-                    <button disabled={(isLoading || !isAgreementChecked )} onClick={(e)=> handleSignup(e)}>Sign up</button>
+                        <h3 className='confirm-password'>Confirm Password</h3>
+                        <input type="password" onChange={(e) =>{setConfrimPassword(e.target.value)}}
+                        value={confirmPassword}
+                        className={emptyFields.includes('confirm-password') ? 'error': 'confrim-password'}/> <br />
+                        <br />
+                        <input type="checkbox"
+                        value={isAgreementChecked}
+                        onChange={handleAgreementCheck} />
+                        <label className="terms" htmlFor="">
+                        I accept the <a href="/">Privacy Policy</a> and the <a href="/">Terms of Service</a></label><br/>
+                        <br/>{error && <div className="error">{error}</div> }
+                        {/* <button disabled={(!agreement)} onClick={handleSignup}>Sign up</button> */}
+                        <br/><button className='sign-up' disabled={(isLoading || !isAgreementChecked )} onClick={(e)=> handleSignup(e)}>Sign up</button><br/>
+                        <br/><label className="p"> Already have an account? </label><Link to="/user/login"><button className='go-back'>Log In</button></Link>
+                        <br/><Link to="/user/login"><br/><button className='go-back'>Go Back</button></Link>
                 </form>
             </div>
         </div>

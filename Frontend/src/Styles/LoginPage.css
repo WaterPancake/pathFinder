@@ -1,17 +1,20 @@
 .user-login-screen{
     display: grid;
     grid-template-columns: 1fr 4fr;
-    height: 100vh;
+    height: 70vh;
     text-align:left;
-
 }
 .user-login-screen div.side-display img{
-    width: 350px;
-    margin-bottom: 30px;
+    display: block;
+    margin: 0 auto;
+    max-width: 200px;
+    margin-bottom: 20px;
 }
-.user-login-screen div.side-display , div.main-display{
+.user-login-screen div.side-display{
     /* display: flex; */
-    padding: 15vh 0px 10px 10px;
+    /* padding: 15vh 0px 10px 10px; */
+    padding-top: 20px;
+    height: 20%;
     /* flex: 1; */
 }
 .user-login-screen div.side-display {
@@ -66,26 +69,33 @@
 }
 
 .email {
+    padding-top: 20px;
     font: 25px sans-serif;
     color: white;
 }
 
 .password {
+    padding-top: 10px;
+    padding-bottom: 10px;
     font: 25px sans-serif;
     color: white;
 }
 
 .remainder {
-    font: 24px sans-serif;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font: 26px sans-serif;
     color: white;
+    
 }
 
 .loginbutton {
-    padding: 20px 40px 20px 40px;
+    padding-top: 10px;
+    padding-bottom: 20px;
     background-color: black;
     color: white;
     border-radius: 5px;
-    font-size: 50px;
+    font-size: 25px;
     text-align: center;
     cursor: pointer;
     font-weight: 500;
@@ -93,14 +103,14 @@
 }
 
 .skip-button {
-    padding: 20px 40px 20px 40px;
+    padding: 10px 60px 10px 60px;
     background-color: black;
     color: white;
     border-radius: 5px;
-    font-size: 50px;
+    font-size: 20px;
     text-align: center;
     cursor: pointer;
-    font-weight: 500;
+    font-weight: 300;
     border: solid #fafafad9 5px;
 }
 
@@ -114,17 +124,18 @@
                 0 0 25px #434546,
                 0 0 50px #707374,
                 0 0 200px #f4f5f5;
-     -webkit-box-reflect:below 2px linear-gradient(transparent, #0005);
+    -webkit-box-reflect:below 2px linear-gradient(transparent, #0005);
     border-color: black;
 }
 
 .buttons {
-    display: flex;
-    justify-content: space-evenly;
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-content: space-between;
 }
 
 .sign-up-button{
-    margin-top: 20px;
+    margin-top: 10px;
     padding: 10px;
     background-color: black;
     color: white;
@@ -144,6 +155,53 @@
                 0 0 25px #434546,
                 0 0 50px #707374,
                 0 0 200px #f4f5f5;
-     -webkit-box-reflect:below 2px linear-gradient(transparent, #0005);
+    -webkit-box-reflect:below 2px linear-gradient(transparent, #0005);
     border-color: black;
 }
+
+.main-display
+{
+    width: 100% !important;
+    height: 68% !important;
+}
+
+.here-button{
+    margin-left: 10px;
+    margin-top: 10px;
+    padding: 10px;
+    background-color: black;
+    color: white;
+    border-radius: 5px;
+    font-size: 20px;
+    text-align: center;
+    cursor: pointer;
+    font-weight: 500;
+    border: solid #fafafad9 5px;
+    width: 100px;
+}
+
+.here-button:hover
+{
+    background: #f1f2f2;
+    color: #050801;
+    box-shadow: 0 0 5px #191919,
+                0 0 25px #434546,
+                0 0 50px #707374,
+                0 0 200px #f4f5f5;
+    -webkit-box-reflect:below 2px linear-gradient(transparent, #0005);
+    border-color: black;
+}
+
+
+.logo-size {
+    padding-right: 20px;
+}
+
+.side-display div.error{
+    font-size: 30px;
+    font-weight: bold;
+    margin-top: 10px;
+    color: red;
+    margin-bottom: 10px;
+}
+

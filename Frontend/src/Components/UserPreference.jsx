@@ -6,6 +6,7 @@ import PriceBar from '../Components/PriceBar';
 import RadiuBar from '../Components/RadiuBar';
 
 const UserPreference = ({setSelectedLocations}) => {
+  
   const [visibleSections, setVisibleSections] = useState({});
   const [selectedItems, setSelectedItems] = useState([]);
   const [priceBarValue, setPriceBarValue] = useState(1);
@@ -69,13 +70,13 @@ const UserPreference = ({setSelectedLocations}) => {
     <div className="UserPreference">
       {selectedItems}
       <div className="filter">
-      <ColorButton
+      {/* <ColorButton
         id="1"
         label="Other"
         target="Other"
         isVisible={visibleSections['Other']}
         toggleVisible={() => toggleVisibility('Other')}
-      />
+      /> */}
       <ColorButton
         id="2"
         label="Food"
@@ -90,13 +91,13 @@ const UserPreference = ({setSelectedLocations}) => {
         isVisible={visibleSections['Activity']}
         toggleVisible={() => toggleVisibility('Activity')}
       />
-      <ColorButton
+      {/* <ColorButton
         id="4"
         label="Shelter"
         target="Shelter"
         isVisible={visibleSections['Shelter']}
         toggleVisible={() => toggleVisibility('Shelter')}
-      />
+      /> */}
       </div>
 
       {visibleSections['Other'] && (

@@ -4,40 +4,124 @@
 .user-signup-screen{
     display: grid;
     grid-template-columns: 1fr 4fr;
-    height: 100vh;
-    text-align:left;
+    height: 100vh !important;
 }
-.user-signup-screen div.main-display img{
-    width: 400px;
-    margin-bottom: 30px;
-    margin-left: -30px;
 
-}
-.user-signup-screen div.main-display , div.main-display{
-    padding-left: 50vh;
-    padding-top: 7vh;
-    background-image: url(https://images.pexels.com/photos/2291428/pexels-photo-2291428.jpeg);
-    background-position: 10% 35%;
+.user-signup-screen div.side-display{
+    background-image: url("../Images/side-display.gif");
     background-size: cover;
+    background-position: 10% 25%;
+    height: 100vh !important;
 }
+
 .user-signup-screen div.main-display{
-    color: white;
+    display: flex;
+    text-align:center;
+    justify-content: center; 
+    align-items: center; 
+    background-image: url('../Images/sign-up-page-img2.jpg');
+    background-size: cover;
+    height: 100vh !important;
 }
-.user-signup-screen div.main-display label{
-    font-size: 50px;
+
+.creating {
+    font-size: 40px;
+    color: white;
+    font-weight: bold;
+}
+
+.terms {
+    font-size: 20px;
+    color: white;
+    font-weight: bold;
 }
 .user-signup-screen div.main-display h3{
-    margin: 10px 0px;
-    font-size: 30px;
+    font-size: 25px;
+    color: white;
+    font-weight: bold;
+}
+
+.user-signup-screen div.main-display form input[type='text'], .user-signup-screen div.main-display form input[type=password]{
+    font-size: 20px;
+    color: rgb(0, 0, 0);
+    font-weight: bold;
+}
+
+.sign-up{
+    margin-left: 10px;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: black;
+    color: white;
+    border-radius: 5px;
+    font-size: 20px;
+    text-align: center;
+    cursor: pointer;
     font-weight: 500;
+    border: solid #fafafad9 5px;
+    width: 300px;
+}
+
+.sign-up:hover
+{
+    background: #f1f2f2;
+    color: #050801;
+    box-shadow: 0 0 5px #191919,
+                0 0 25px #434546,
+                0 0 50px #707374,
+                0 0 200px #f4f5f5;
+    -webkit-box-reflect:below 2px linear-gradient(transparent, #0005);
+    border-color: black;
+}
+
+.go-back{
+    margin-left: 10px;
+    margin-bottom: 10px;
+    padding: auto;
+    background-color: black;
+    color: white;
+    border-radius: 5px;
+    font-size: 20px;
+    text-align: center;
+    cursor: pointer;
+    font-weight: 500;
+    border: solid #fafafad9 5px;
+    width: 100px;
+}
+
+.go-back:hover
+{
+    background: #f1f2f2;
+    color: #050801;
+    box-shadow: 0 0 5px #191919,
+                0 0 25px #434546,
+                0 0 50px #707374,
+                0 0 200px #f4f5f5;
+    -webkit-box-reflect:below 2px linear-gradient(transparent, #0005);
+    border-color: black;
+}
+
+.p {
+    font-size: 30px;
+    color: white;
+    font-weight: bold;
+}
+
+.user-signup-screen div.main-display form input[type="checkbox"]{
+    margin-right: 10px;
+    transform: scale(2);
+}
+
+/* .user-signup-screen div.main-display h3{
+    font-size: 20px;
+    font-weight: 2000;
+    color: black;
 }
 
 .user-signup-screen div.main-display form{
-    /* padding: 20px; */
-    margin-top: 20px;
+    margin-top: 10px;
 }
 .user-signup-screen div.main-display form input{
-    margin-bottom: 15px;
     padding:5px;
 }
 .user-signup-screen div.main-display form input.error{
@@ -47,32 +131,34 @@
 .user-signup-screen div.main-display form input[type='text'], .user-signup-screen div.main-display form input[type=password]{
     width: 400px;
     font-size: 20px;
-    /* padding: 5px 0px; */
+    font-weight: 2000;
 }
 .user-signup-screen div.main-display form input[type="checkbox"]{
-    /* display: flex; */
     margin-right: 10px;
 }
 .user-signup-screen div.main-display form button{
-    margin-top: 20px;
     font-size: 20px;
+    font-weight: 2000;
 }
 .user-signup-screen div.main-display form label{
-    font-size: 20px;
+    font-size: 30px;
+    font-weight: 2000;
 }
 .user-signup-screen div.main-display form a{
     color:#0679ed;
-}
+} */
 /* .user-signup-screen div.main-display form a{
     color:aqua ;
 } */
-.user-signup-screen div.side-display{
-    background-image: url("https://media.giphy.com/media/xUA7b6ss1J4EnvkLQY/giphy.gif");
-    background-size: cover;
-    width: 100%;
-    height: 100%;
-    background-position: 10% 25%;
-}
+
 .user-signup-screen div.error{
+    font-size: 30px;
+    font-weight: bold;
+    margin-top: 10px;
     color: red;
 }
+
+/* .email, .password{
+    color: black;
+    font-weight: 500;
+} */

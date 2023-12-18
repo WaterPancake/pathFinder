@@ -1,89 +1,64 @@
-from flask import Flask 
-from flask import jsonify
-from flask import request
-from flask import blueprints
-import random
-from flask_cors import CORS
-
-
-#stuff for Google maps
+from flask import Flask, jsonify, request
+from flask_cors import CORS, cross_origin
 import googlemaps
-gmaps = googlemaps.Client(key=KEY)
 
+# Initialize Google Maps Client
+gmaps = googlemaps.Client(key='AIzaSyBEXWNMZk04AR8ivjwnzrmkax0CVsUX8oQ')
 
 app = Flask(__name__)
-CORS(app, resources={r"/POI": {"origins": "*"}})
+CORS(app, resources={r"/POI": {"origins": "http://localhost:3000"}})
 
+def get_photo_html(photo_details):
+    reference = photo_details[0]['photo_reference']
+    link = 'https://maps.googleapis.com/maps/api/place/photo?maxwidth=600' + '&photo_reference=' + reference + '&key=YOUR_GOOGLE_MAPS_API_KEY'
+    return link
+@cross_origin()
+@app.route('/find_endpoint', methods=["POST"])
+def API_Endpoint():
+    if request.method == 'OPTIONS':
+        return ('', 204)
 
-@app.route('/POI', methods=["POST"])
-def find_POI():
-  keywords = request.json["keywords"]
-  # keywords = ["Cafe","Convenience Store", "Restaurant"]
-  # will hold all the recomendations
-  poi = []
-  
-  for cordinate in request.json["cordinates"]:
-    params = {
-        'query': keywords,
-        'location': cordinate, 
-        'radius': 1000    # to be made adaptive
-        'open_now': True
+    x = {'results': []}
+
+    lat = request.json['cordinates'][0]
+    lng = request.json['cordinates'][1]
+    radius = request.json['radius']
+    location_bias = 'circle:' + str(radius) + '@' + str(lat) + "," + str(lng)
+
+    API_request = {
+        'INPUT': request.json['keywords'],
+        'input_type': 'textquery',
+        'fields': ['types', 'rating', 'business_status', 'geometry/location/lng', 'geometry/location/lat',
+                   'user_ratings_total', 'photos', 'formatted_address', 'name', 'place_id', 'price_level', ],
+        'location_bias': location_bias
     }
-    recomendation = gmaps.places(**params)
-    choice = random.randrange(len(recomendation['results']) - 1)
-    poi.append({ 
-        'name': recomendation['results'][choice]['name'],
-        'lat': recomendation['results'][choice]['geometry']['location']['lat'], 
-        'lng': recomendation['results'][choice]['geometry']['location']['lng'],
-        'placeID': recomendation['results'][choice]['place_id'],
-        'atributes': recomendation['results'][choice]['types'],
-        'icon': recomendation['results'][choice]['icon'],
-        'photo': recomendation['results'][choice]['photos'],
-        'rating': recomendation['results'][choice]['rating'],
-        'user_rating_total': recomendation['results'][choice]['user_ratings_total'],
-        'address': recomendation['results'][choice]['formatted_address'],
-        'price_level': recomendation['results'][choice]['price_level']
-    }) 
 
-  return jsonify(poi)
+    for INPUT in API_request['INPUT']:
+        params = {
+            'input': INPUT,
+            'input_type': 'textquery',
+            'fields': API_request['fields'],
+            'location_bias': API_request['location_bias']
+        }
+        result = gmaps.find_place(**params)
+        if result['status'] != "OK":
+            rec = {}
+        else:
+            rec = {
+                'name': result['candidates'][0]['name'],
+                'lat': result['candidates'][0]['geometry']['location']['lat'],
+                'lng': result['candidates'][0]['geometry']['location']['lng'],
+                'placeID': result['candidates'][0]['place_id'],
+                'photos': get_photo_html(result['candidates'][0]['photos']),
+                'atributes': result['candidates'][0]['types'],
+                'rating': result['candidates'][0]['rating'],
+                'user_rating_total': result['candidates'][0]['user_ratings_total'],
+                'address': result['candidates'][0]['formatted_address']
+            }
 
-# basic recomendation function, the top three
-# how to deal with locations along the way, a way of picking some place (use some mid point or at random)?
+        x['results'].append(rec)
 
-#
-# @app.route('/POI', methods=["POST"])
-# def find_POI():
-#   # getting all the paramters from the fetch request, the get() arguments should match here and the java state objects properties.
-
-
-#     cordinate = (float(request.json['lat']), float(request.json['lng']))
-#     keywords = request.json['keywords']
-
-# #   return 'Done', 201
-# #  return jsonify({"cordinate": cordinate, "keywords": keywords})
-# #   Hard encodede for the moment
-#     params = {
-#        'query': keywords,
-#        'location': cordinate,
-#        'radius': 1000
-#     }
-
-#     recomendation = gmaps.places(**params)
-
-#     choice = random.randrange(len(recomendation['results']) - 1)
-
-#     poi = {'name': recomendation['results'][choice]['name'],
-#       'lat': recomendation['results'][choice]['geometry']['location']['lat'], 
-#       'lng': recomendation['results'][choice]['geometry']['location']['lng'],
-#       'placeID': recomendation['results'][choice]['place_id']}  
-
-
-# #    return jsonify({'cordinate': cordinate, 'keywords': keywords})
-#     return jsonify(poi)
-
-    # call the gmaps route
-    # create the querry to call the API
-
+    return jsonify(x)
 
 if __name__ == '__main__':
-  app.run(debug=True, port=5000)
+    app.run(debug=True, port=8000)

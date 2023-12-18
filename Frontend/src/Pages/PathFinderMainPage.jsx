@@ -61,7 +61,7 @@ const PathFinderMainPage = () => {
   /** @type React.MutableRefObject<HTMLInputElement> */
   const originRef = useRef(null)
   /** @type React.MutableRefObject<HTMLInputElement> */
-  const destinationRef = useRef()
+  const destinationRef = useRef(null)
 
 
   const handleWhereToButtonClick = () => {
@@ -268,6 +268,7 @@ const addWaypoint = () =>{
 
   }) 
 }
+
 const toggleRoutes = ()=>{
  if(directionsArray.length>1){ 
     directionRenderer.setDirections(directionsArray[pickRoute]);
@@ -328,66 +329,67 @@ const generateRoutesForUser = async()=>{
   if(selectedLocations.length === 0){
     alert('Please chooose a location');
   }else{
-    console.log("selectedLocations: ", selectedLocations);
-  console.log(nodesAlongRoute);
+    // console.log("selectedLocations: ", selectedLocations);
+  // console.log(nodesAlongRoute);
     setCalculatedRouteWaypoints([]);
     setGeneratedRoutes([]);
     setDistance(``);
     setDuration(``);
-    //URL to be changbed 
-    let results = await fetch('http://localhost:5000/POI',{
-      method:"POST",
-      headers:{'Content-Type': 'application/json'},
-      body:JSON.stringify({
-        cordinates: [
-            { lat: nodesAlongRoute[0].lat, lng:nodesAlongRoute[0].lng },
-            { lat: nodesAlongRoute[1].lat, lng:nodesAlongRoute[1].lng },
-            { lat: nodesAlongRoute[2].lat, lng: nodesAlongRoute[2].lng }
-        ],
-        keywords: selectedLocations
-    }), mode: 'cors'
-  })
+  //   //URL to be changbed 
+    let results = await fetch('http://localhost:5000/find_endpoint',{
+          method:"POST",
+          headers:{'Content-Type': 'application/json'},
+          body:JSON.stringify({
+            cordinates: [
+                { lat: nodesAlongRoute[0].lat, lng:nodesAlongRoute[0].lng },
+                { lat: nodesAlongRoute[1].lat, lng:nodesAlongRoute[1].lng },
+                { lat: nodesAlongRoute[2].lat, lng: nodesAlongRoute[2].lng }
+            ],
+            keywords: selectedLocations
+        }), mode: 'cors'
+      } 
+    )
 
-    results = await results.json();
-    // console.log(results)
-    /**This Calculates a route for each set of waypoints from the api */
-    //Get the origin coordinates
-    const origin = originRef.current.value;
-    //get the destination coordinates
-    const destination = destinationRef.current.value;
-    //results.routeWayPoints is subject to change
-    // setCalculatedRouteWaypoints(results.routeWayPoints);
-     //For each array of waypoints
+  //   results = await results.json();
+  //   // console.log(results)
+  //   /**This Calculates a route for each set of waypoints from the api */
+  //   //Get the origin coordinates
+  //   const origin = originRef.current.value;
+  //   //get the destination coordinates
+  //   const destination = destinationRef.current.value;
+  //   //results.routeWayPoints is subject to change
+  //   // setCalculatedRouteWaypoints(results.routeWayPoints);
+  //    //For each array of waypoints
     
-     setGeneratedRoutes((prev)=>[...prev,directionsArray[0]]);
-     results.forEach((waypoint)=>{
-      let stopoverWaypoints = []
-      //creates a waypoint object and saves it to an array 
-          stopoverWaypoints.push({location:waypoint, stopover:true});
-          setCalculatedRouteWaypoints((prev)=>[...prev,waypoint] )
-          // They way Wu is setting up the list is causing the python server to crash
-          // console.log({location:waypoint, stopover:true})
-          //create the DirectionService request object
-      const request = {
-        origin,
-        destination,
-        travelMode: 'DRIVING',
-        waypoints:stopoverWaypoints,
-        optimizeWaypoints: true
-      };
-      //Uses the directionService.route to generate a route and saves it to generated route
-      directionService.route(request, (result,status) =>{
-        if(status === 'OK')
-        {console.log("OK")
-          setGeneratedRoutes((prev)=>[...prev,result]);
+  //    setGeneratedRoutes((prev)=>[...prev,directionsArray[0]]);
+  //    results.forEach((waypoint)=>{
+  //     let stopoverWaypoints = []
+  //     //creates a waypoint object and saves it to an array 
+  //         stopoverWaypoints.push({location:waypoint, stopover:true});
+  //         setCalculatedRouteWaypoints((prev)=>[...prev,waypoint] )
+  //         // They way Wu is setting up the list is causing the python server to crash
+  //         // console.log({location:waypoint, stopover:true})
+  //         //create the DirectionService request object
+  //     const request = {
+  //       origin,
+  //       destination,
+  //       travelMode: 'DRIVING',
+  //       waypoints:stopoverWaypoints,
+  //       optimizeWaypoints: true
+  //     };
+  //     //Uses the directionService.route to generate a route and saves it to generated route
+  //     directionService.route(request, (result,status) =>{
+  //       if(status === 'OK')
+  //       {console.log("OK")
+  //         setGeneratedRoutes((prev)=>[...prev,result]);
 
-        }
-        else{
-          alert(status);
-        }
-      })
+  //       }
+  //       else{
+  //         alert(status);
+  //       }
+  //     })
           
-    })
+  //   })
     
   }
   setIsLoading(false);
@@ -480,7 +482,7 @@ const callML = async() =>{
                 <button onClick={() => map.panTo(center)}>reset</button>
                 {/* <button onClick={() => console.log(originRef.current.value, destinationRef.current.value)}>console</button> */}
                 {/* <button onClick={getLocation}>location</button> */}
-                <button onClick={()=>newCalculateRoute()}>Calculate Route</button>
+                {showDestinationPicker&&<button onClick={()=>newCalculateRoute()}>Calculate Route</button>}
                 {/* <button>Try Again</button> */}
                 <button onClick={()=> newClearRoute()}>Clear Route</button>
                 {/* <button onClick={()=> addWaypoint()}>Add Waypoint Route</button> */}

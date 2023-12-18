@@ -3,14 +3,14 @@ from flask_cors import CORS, cross_origin
 import googlemaps
 
 # Initialize Google Maps Client
-gmaps = googlemaps.Client(key='YOUR_GOOGLE_MAPS_API_KEY')
+gmaps = googlemaps.Client(key='AIzaSyBEXWNMZk04AR8ivjwnzrmkax0CVsUX8oQ')
 
 app = Flask(__name__)
-CORS(app, resources={r"/POI": {"origins": "http://localhost:3000"}})
+CORS(app, resources={r"/find_endpoint": {"origins": "http://localhost:3000"}})
 
 def get_photo_html(photo_details):
     reference = photo_details[0]['photo_reference']
-    link = 'https://maps.googleapis.com/maps/api/place/photo?maxwidth=600' + '&photo_reference=' + reference + '&key=YOUR_GOOGLE_MAPS_API_KEY'
+    link = 'https://maps.googleapis.com/maps/api/place/photo?maxwidth=600' + '&photo_reference=' + reference + '&key=AIzaSyBEXWNMZk04AR8ivjwnzrmkax0CVsUX8oQ'
     return link
 @cross_origin()
 @app.route('/find_endpoint', methods=["POST"])
@@ -61,4 +61,4 @@ def API_Endpoint():
     return jsonify(x)
 
 if __name__ == '__main__':
-    app.run(debug=True, port=8000)
+    app.run(debug=True, port=3001)

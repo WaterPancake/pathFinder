@@ -3,7 +3,7 @@ from flask_cors import CORS, cross_origin
 import googlemaps
 
 # Initialize Google Maps Client
-gmaps = googlemaps.Client(key='AIzaSyBEXWNMZk04AR8ivjwnzrmkax0CVsUX8oQ')
+gmaps = googlemaps.Client(key='YOUR_GOOGLE_MAPS_API_KEY')
 
 app = Flask(__name__)
 CORS(app, resources={r"/POI": {"origins": "http://localhost:3000"}})
